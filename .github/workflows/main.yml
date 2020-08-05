@@ -25,7 +25,7 @@ jobs:
 
     # Set up deps
     - name: set up deps
-      run: npm install -g csv2geojson
+      run: npm install csv2geojson
 
     # Runs a single command using the runners shell
     - name: build it
