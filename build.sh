@@ -13,6 +13,6 @@ join -t , -1 2 -2 2 -o 1.1,0,2.3,2.4 <(sort -k 2 -t , target/restaurant_postcode
 
 awk -F, -f filter_postcodes.awk target/restaurants_with_lat_lon.csv | awk -F, -f reduce_precision.awk > target/filtered_restaurants_with_lat_lon.csv
 
-cat <(echo name,postcode,lat,lon) target/filtered_restaurants_with_lat_lon.csv | csv2geojson --lat lat --lon lon | jq -c . | gzip -c > target/restaurants.geojson.gz
+cat <(echo name,postcode,lat,lon) target/filtered_restaurants_with_lat_lon.csv | node_modules/csv2geojson/csv2geojson --lat lat --lon lon | jq -c . | gzip -c > target/restaurants.geojson.gz
 
 rm target/*.csv
