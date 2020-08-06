@@ -12,7 +12,7 @@ extension ErrorUI {
 
     init(error: Error, action: ErrorUIAction? = nil) {
         self.title = "Internal Error"
-        self.defaultActionTitle = "OK"
+        self.defaultActionTitle = "Retry"
         self.message = error.localizedDescription
         self.errorActionHandler = action
     }

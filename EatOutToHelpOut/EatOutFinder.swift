@@ -1,5 +1,5 @@
 import Foundation
-import CoreLocation
+import MapKit
 
 protocol EatOutFinderOutlet: AnyObject {
     func show(_ : ErrorUI)
@@ -80,6 +80,7 @@ class EatOutFinder {
 
             let errorUI = ErrorUI(error: error) { (actionTitle) in
                 AppLogger.log(object: self, function: #file, message: "TODO: Error Action Handle \(actionTitle)")
+                self.load()
             }
 
             dispatchMain {
@@ -181,6 +182,9 @@ class EatOutNetworkGeoJSONDataSession {
     }
 
     private func decodeJSON(data: Data) {
+
+        //TODO: Swap in MKGeoJSONDecoder as a less code alternative
+
         let decoder = JSONDecoder()
         do {
             let collection = try decoder.decode(GeoJSONFeatureCollection.self, from: data)
