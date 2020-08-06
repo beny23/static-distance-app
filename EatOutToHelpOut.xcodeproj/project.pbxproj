@@ -3,17 +3,20 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		8C1870FA24DAB32100CA919B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1870F924DAB32100CA919B /* AppDelegate.swift */; };
-		8C1870FC24DAB32100CA919B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1870FB24DAB32100CA919B /* SceneDelegate.swift */; };
-		8C1870FE24DAB32100CA919B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1870FD24DAB32100CA919B /* ViewController.swift */; };
 		8C18710124DAB32100CA919B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C1870FF24DAB32100CA919B /* Main.storyboard */; };
 		8C18710324DAB32500CA919B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C18710224DAB32500CA919B /* Assets.xcassets */; };
 		8C18710624DAB32500CA919B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C18710424DAB32500CA919B /* LaunchScreen.storyboard */; };
 		8C18711124DAB32500CA919B /* EatOutToHelpOutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18711024DAB32500CA919B /* EatOutToHelpOutTests.swift */; };
+		8C18711C24DAB35D00CA919B /* EatOutFinderUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */; };
+		8C18711E24DAB50800CA919B /* AppContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18711D24DAB50800CA919B /* AppContext.swift */; };
+		8C18712024DACC4800CA919B /* EatOutFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18711F24DACC4800CA919B /* EatOutFinder.swift */; };
+		8C18712224DADBE400CA919B /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18712124DADBE400CA919B /* AppLogger.swift */; };
+		8CDF212824DB033A0031E6D2 /* GZIP in Frameworks */ = {isa = PBXBuildFile; productRef = 8CDF212724DB033A0031E6D2 /* GZIP */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,8 +32,6 @@
 /* Begin PBXFileReference section */
 		8C1870F624DAB32100CA919B /* EatOutToHelpOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EatOutToHelpOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C1870F924DAB32100CA919B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8C1870FB24DAB32100CA919B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8C1870FD24DAB32100CA919B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8C18710024DAB32100CA919B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8C18710224DAB32500CA919B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C18710524DAB32500CA919B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -38,6 +39,10 @@
 		8C18710C24DAB32500CA919B /* EatOutToHelpOutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EatOutToHelpOutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C18711024DAB32500CA919B /* EatOutToHelpOutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EatOutToHelpOutTests.swift; sourceTree = "<group>"; };
 		8C18711224DAB32500CA919B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EatOutFinderUI.swift; sourceTree = "<group>"; };
+		8C18711D24DAB50800CA919B /* AppContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContext.swift; sourceTree = "<group>"; };
+		8C18711F24DACC4800CA919B /* EatOutFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EatOutFinder.swift; sourceTree = "<group>"; };
+		8C18712124DADBE400CA919B /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CDF212824DB033A0031E6D2 /* GZIP in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,12 +86,14 @@
 			isa = PBXGroup;
 			children = (
 				8C1870F924DAB32100CA919B /* AppDelegate.swift */,
-				8C1870FB24DAB32100CA919B /* SceneDelegate.swift */,
-				8C1870FD24DAB32100CA919B /* ViewController.swift */,
+				8C18711D24DAB50800CA919B /* AppContext.swift */,
+				8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */,
+				8C18711F24DACC4800CA919B /* EatOutFinder.swift */,
 				8C1870FF24DAB32100CA919B /* Main.storyboard */,
 				8C18710224DAB32500CA919B /* Assets.xcassets */,
 				8C18710424DAB32500CA919B /* LaunchScreen.storyboard */,
 				8C18710724DAB32500CA919B /* Info.plist */,
+				8C18712124DADBE400CA919B /* AppLogger.swift */,
 			);
 			path = EatOutToHelpOut;
 			sourceTree = "<group>";
@@ -115,6 +123,9 @@
 			dependencies = (
 			);
 			name = EatOutToHelpOut;
+			packageProductDependencies = (
+				8CDF212724DB033A0031E6D2 /* GZIP */,
+			);
 			productName = EatOutToHelpOut;
 			productReference = 8C1870F624DAB32100CA919B /* EatOutToHelpOut.app */;
 			productType = "com.apple.product-type.application";
@@ -165,6 +176,9 @@
 				Base,
 			);
 			mainGroup = 8C1870ED24DAB32100CA919B;
+			packageReferences = (
+				8CDF212624DB033A0031E6D2 /* XCRemoteSwiftPackageReference "GZIP" */,
+			);
 			productRefGroup = 8C1870F724DAB32100CA919B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -200,9 +214,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C1870FE24DAB32100CA919B /* ViewController.swift in Sources */,
+				8C18712024DACC4800CA919B /* EatOutFinder.swift in Sources */,
+				8C18712224DADBE400CA919B /* AppLogger.swift in Sources */,
+				8C18711E24DAB50800CA919B /* AppContext.swift in Sources */,
+				8C18711C24DAB35D00CA919B /* EatOutFinderUI.swift in Sources */,
 				8C1870FA24DAB32100CA919B /* AppDelegate.swift in Sources */,
-				8C1870FC24DAB32100CA919B /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +485,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8CDF212624DB033A0031E6D2 /* XCRemoteSwiftPackageReference "GZIP" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nicklockwood/GZIP";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8CDF212724DB033A0031E6D2 /* GZIP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8CDF212624DB033A0031E6D2 /* XCRemoteSwiftPackageReference "GZIP" */;
+			productName = GZIP;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8C1870EE24DAB32100CA919B /* Project object */;
 }
