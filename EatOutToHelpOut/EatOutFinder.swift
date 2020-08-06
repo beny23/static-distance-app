@@ -1,37 +1,18 @@
 import Foundation
 import CoreLocation
 
-struct ErrorUI {
-    typealias ErrorUIAction = (_ actionTitle: String)->Void
-    let message: String
-    let title: String
-    let defaultActionTitle: String
-    let errorActionHandler: ErrorUIAction?
-}
-
-extension ErrorUI {
-
-    init(error: Error, action: ErrorUIAction? = nil) {
-        self.title = "Internal Error"
-        self.defaultActionTitle = "OK"
-        self.message = error.localizedDescription
-        self.errorActionHandler = action
-    }
-
-}
-
 protocol EatOutFinderOutlet: AnyObject {
     func show(_ : ErrorUI)
-    func show(_ : [EatOutFinderItem])
+    func show(_ : [EatOutFinderItemUI])
 }
 
-enum EatOutLocationDataError: Error {
+enum EatOutFinderDataError: Error {
 
-    case FetchDataUnexpectedError
+    case FetchUnexpectedError
 
     var localizedDescription: String {
         switch self {
-        case .FetchDataUnexpectedError:
+        case .FetchUnexpectedError:
             return "An unexpected error occured loading data. Try again later."
         }
     }
@@ -57,14 +38,19 @@ protocol EatOutFinderGateway: AnyObject {
 
 }
 
-class EatOutFinderItem: NSObject {
+class EatOutFinderItemUI: NSObject {
+
     let coordinate: CLLocationCoordinate2D
+
     let name: String
 
     fileprivate init(entity: EatOutLocationEntity) {
+
         self.coordinate = CLLocationCoordinate2D(latitude: entity.coordinate.lat, longitude: entity.coordinate.long)
         self.name = entity.name
+
     }
+
 }
 
 class EatOutFinder {
@@ -90,7 +76,7 @@ class EatOutFinder {
 
         guard let entities = entities else {
 
-            let error = (error ?? EatOutLocationDataError.FetchDataUnexpectedError)
+            let error = (error ?? EatOutFinderDataError.FetchUnexpectedError)
 
             let errorUI = ErrorUI(error: error) { (actionTitle) in
                 AppLogger.log(object: self, function: #file, message: "TODO: Error Action Handle \(actionTitle)")
@@ -105,14 +91,16 @@ class EatOutFinder {
         }
 
         dispatchMain {
-            let items = entities.map { EatOutFinderItem(entity: $0) }
+            let items = entities.map { EatOutFinderItemUI(entity: $0) }
             self.outlet?.show( items )
         }
 
     }
 
     private func dispatchMain(_ block: @escaping () -> Void) {
+
         DispatchQueue.main.async { block() }
+
     }
 
 
@@ -121,15 +109,17 @@ class EatOutFinder {
 // MARK: - Entity
 
 struct EatOutLocationEntity {
+
     let coordinate: (lat: Double, long: Double)
     let name: String
+
 }
 
-// MARK: - Web File JSON Gateway
+// MARK: - Network GeoJSON Gateway
 
-class EatOutNetworkGateway: EatOutFinderGateway {
+class EatOutNetworkGeoJSONGateway: EatOutFinderGateway {
 
-    let dataSession = EatOutNetworkDataSession()
+    let dataSession = EatOutNetworkGeoJSONDataSession()
     var completion: FetchLocationsCompletion? = nil
 
     func fetchLocations(completion: @escaping FetchLocationsCompletion) {
@@ -137,10 +127,10 @@ class EatOutNetworkGateway: EatOutFinderGateway {
         dataSession.fetchData(completion: fetchHandler)
     }
 
-    private func fetchHandler(features: [WebServiceFeature]?, error: Error?) -> Void {
+    private func fetchHandler(features: [GeoJSONFeature]?, error: Error?) -> Void {
 
         guard let features = features else {
-            completion?(nil, error ?? EatOutLocationDataError.FetchDataUnexpectedError )
+            completion?(nil, error ?? EatOutFinderDataError.FetchUnexpectedError )
             return
         }
 
@@ -157,16 +147,16 @@ class EatOutNetworkGateway: EatOutFinderGateway {
 }
 
 
-class EatOutNetworkDataSession {
+class EatOutNetworkGeoJSONDataSession {
 
     // MARK: Properties
 
-    fileprivate typealias FetchDataCompletion = (_ : [WebServiceFeature]?, _ : Error?) -> Swift.Void
+    fileprivate typealias FetchDataCompletion = (_ : [GeoJSONFeature]?, _ : Error?) -> Swift.Void
 
     private let dataURL = URL(string: "https://beny23.github.io/static-distance-app/restaurants.geojson.gz")!
 
-    lazy private var downloadManager: WebServiceFileDownloadManager = {
-        WebServiceFileDownloadManager(delegate: self)
+    lazy private var downloadManager: URLSessionJSONFileDownloadManager = {
+        URLSessionJSONFileDownloadManager(delegate: self)
     }()
 
     lazy private var session: URLSession = {
@@ -193,7 +183,7 @@ class EatOutNetworkDataSession {
     private func decodeJSON(data: Data) {
         let decoder = JSONDecoder()
         do {
-            let collection = try decoder.decode(WebServiceFeatureCollection.self, from: data)
+            let collection = try decoder.decode(GeoJSONFeatureCollection.self, from: data)
             complete(with: collection)
         } catch {
             AppLogger.log(object: self, function: #function, error: error )
@@ -202,7 +192,7 @@ class EatOutNetworkDataSession {
 
     //MARK: Completion
 
-    private func complete(with collection: WebServiceFeatureCollection) {
+    private func complete(with collection: GeoJSONFeatureCollection) {
         AppLogger.log(object: self, function: #function, message: "Did Decode GeoJSON Type:\(collection.type)")
         complete(with: collection.features, error: nil)
     }
@@ -212,22 +202,22 @@ class EatOutNetworkDataSession {
         complete(with: nil, error: error)
     }
 
-    private func complete(with items: [WebServiceFeature]?, error: Error?) {
+    private func complete(with items: [GeoJSONFeature]?, error: Error?) {
         fetchCompletion?(items, error)
         fetchCompletion = nil
     }
 
 }
 
-extension EatOutNetworkDataSession: WebServiceFileDownloadManagerDelegate {
+extension EatOutNetworkGeoJSONDataSession: JSONFileDownloadManagerDelegate {
 
-    func downloadManager(_ manager: WebServiceFileDownloadManager, didDownload data: Data?, error: Error?) {
+    func downloadManager(_ manager: URLSessionJSONFileDownloadManager, didDownload data: Data?, error: Error?) {
 
         AppLogger.log(object: self, function: #function)
 
         guard let data = data else {
 
-            let error = error ?? EatOutLocationDataError.FetchDataUnexpectedError
+            let error = error ?? EatOutFinderDataError.FetchUnexpectedError
 
             complete(with: error)
 
@@ -240,96 +230,14 @@ extension EatOutNetworkDataSession: WebServiceFileDownloadManagerDelegate {
 
 }
 
-protocol WebServiceFileDownloadManagerDelegate: AnyObject {
-    func downloadManager(_ manager: WebServiceFileDownloadManager, didDownload data: Data?, error: Error?)
-}
-
-import GZIP
-
-enum WebServiceFileDownloadManagerError: Error {
-    case FileReadFailed
-}
-
-class WebServiceFileDownloadManager: NSObject, URLSessionDownloadDelegate {
-
-    let delegate: WebServiceFileDownloadManagerDelegate
-    var tmpDownloadedFileHandle: FileHandle? = nil
-
-    init(delegate: WebServiceFileDownloadManagerDelegate) {
-        self.delegate = delegate
-    }
-
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let error = error else { return }
-        AppLogger.log(object: self, function: #function, error: error)
-    }
-
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-
-        AppLogger.log(object: self, function: #function, message: "Status Code:\((downloadTask.response as! HTTPURLResponse).statusCode)")
-        AppLogger.log(object: self, function: #function, message: "\(location)")
-
-        // Open the temporary file to prevent it being destroyed by the system
-
-        do {
-            tmpDownloadedFileHandle = try FileHandle(forReadingFrom: location)
-        } catch {
-            self.delegate.downloadManager(self, didDownload: nil, error: error)
-            return
-        }
-
-        // Read in background to prevent blocking of urlsession delegate queue
-
-        DispatchQueue.global(qos: .background).async { [unowned self] in
-            do {
-                let tmpData = self.tmpDownloadedFileHandle!.availableData
-                let savedDataFilePath = try self.write(data: tmpData)
-                self.open(file: savedDataFilePath)
-                try? self.tmpDownloadedFileHandle?.close()
-            } catch {
-                AppLogger.log(object: self, function: #function, error: error)
-                self.delegate.downloadManager(self, didDownload: nil, error: error)
-            }
-        }
-    }
-
-    private func open(file: URL) {
-
-        AppLogger.log(object: self, function: #function)
-        do {
-            let data = try self.read(file: file)
-            self.delegate.downloadManager(self, didDownload: data, error: nil)
-        } catch {
-            self.delegate.downloadManager(self, didDownload: nil, error: error)
-        }
-    }
-
-    private func read(file: URL) throws -> Data {
-        let data = try Data(contentsOf: file) as NSData
-        guard let gunzippedData = data.isGzippedData() ? data.gunzipped() : data as Data else { throw WebServiceFileDownloadManagerError.FileReadFailed }
-        AppLogger.log(object: self, function: #function, message: "Read File Data (Size:\(gunzippedData.count))")
-        return gunzippedData
-    }
-
-    private func write(data: Data) throws -> URL {
-        let filename = "data.json"
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-        var documentsFileURL = URL(fileURLWithPath: documentsPath)
-        documentsFileURL.appendPathComponent(filename, isDirectory: false)
-        AppLogger.log(object: self, function: #function, message: "Write To \(documentsFileURL)")
-        try data.write(to: documentsFileURL)
-        return documentsFileURL
-    }
-}
-
 //MARK: - Geo JSON Data Model
 
-fileprivate struct WebServiceFeatureCollection: Decodable {
+fileprivate struct GeoJSONFeatureCollection: Decodable {
     let type: String
-    let features: [ WebServiceFeature ]
+    let features: [ GeoJSONFeature ]
 }
 
-fileprivate struct WebServiceFeature: Decodable {
+fileprivate struct GeoJSONFeature: Decodable {
     let properties: WebServiceFeatureProperty
     let geometry: WebServiceFeatureGeometry
 }

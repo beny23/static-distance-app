@@ -17,7 +17,7 @@ class EatOutAppContext {
 
     private func configureMainViewController() {
 
-        let gateway = EatOutNetworkGateway()
+        let gateway = EatOutNetworkGeoJSONGateway()
         let interactor = EatOutFinder(gateway: gateway)
         let mainViewController = self.mainViewController
         mainViewController.interactor = interactor

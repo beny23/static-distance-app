@@ -12,11 +12,11 @@ class EatOutMapViewController: UIViewController {
     
 }
 
-extension EatOutFinderItem: MKAnnotation {}
+extension EatOutFinderItemUI: MKAnnotation {}
 
 extension EatOutMapViewController: EatOutFinderOutlet {
 
-    func show(_ items : [EatOutFinderItem]) {
+    func show(_ items : [EatOutFinderItemUI]) {
         annotateMap(with: items)
     }
 
