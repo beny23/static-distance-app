@@ -14,7 +14,7 @@ enum JSONFileDownloadManagerError: Error {
 
 }
 
-class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate {
+class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionTaskDelegate {
 
     let delegate: JSONFileDownloadManagerDelegate
 
@@ -22,17 +22,22 @@ class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate {
         self.delegate = delegate
     }
 
-    //MARK: URLSessionDownloadDelegate
+    //MARK: URLSessionTaskDelegate
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        AppLogger.log(object: self, function: #function)
         guard let error = error else { return }
-        self.delegate.downloadManager(self, didDownload: nil, error: error)
         AppLogger.log(object: self, function: #function, error: error)
     }
+
+
+    //MARK: URLSessionDownloadDelegate
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
 
         AppLogger.log(object: self, function: #function, message: "Status Code:\((downloadTask.response as! HTTPURLResponse).statusCode)")
+
+        AppLogger.logCache()
 
         do {
             let tmpDownloadedFileHandle = try FileHandle(forReadingFrom: location)
@@ -43,6 +48,8 @@ class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate {
         } catch {
             self.delegate.downloadManager(self, didDownload: nil, error: error)
         }
+
+
     }
 
     //MARK: - Internal Guts

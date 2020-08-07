@@ -1,10 +1,22 @@
 import Foundation
 import MapKit
 
+
+enum EatOutFinderDownloadStateUI {
+    case loading, finished
+}
+
+enum UserLocationButtonUI {
+    case disabled, normal, hilighted
+}
+
 protocol EatOutFinderOutlet: AnyObject {
     func show(_ : ErrorUI)
     func show(_ : [EatOutFinderItemUI])
     func show(_ : URL, title: String)
+    func show(_ : EatOutFinderDownloadStateUI)
+    func show(_ : UserLocationButtonUI)
+    func showUserCurrentLocationOnMap()
 }
 
 enum EatOutFinderDataError: Error {
@@ -66,31 +78,62 @@ class EatOutFinder {
     weak var outlet: EatOutFinderOutlet?
 
     let gateway: EatOutFinderGateway
-
-    init(gateway: EatOutFinderGateway) {
+    let locationGateway: UserLocationGateway
+    
+    init(gateway: EatOutFinderGateway, locationGateway: UserLocationGateway) {
 
         self.gateway = gateway
-
+        self.locationGateway = locationGateway
     }
 
     // MARK: - Actions
 
     func load() {
-
         AppLogger.log(object: self, function: #function)
+        outlet?.show(EatOutFinderDownloadStateUI.loading)
         gateway.fetchLocations(completion: handleFetchResponse)
-
     }
-    
+
+    func updateUI() {
+        updateLocation(requestAuthorisation: false)
+    }
+
     func didSelectItem(item: EatOutFinderItemUI) {
 
         outlet?.show(item.searchURL, title: item.name)
 
     }
 
+    func updateLocation() {
+
+        updateLocation(requestAuthorisation: true)
+        
+    }
+
+    private func updateLocation(requestAuthorisation: Bool) {
+        AppLogger.log(object: self, function: #function)
+        locationGateway.fetchUserLocationStatus(requestsAuthorisation: requestAuthorisation) { [weak self] (status) in
+            switch status {
+            case .on:
+                self?.outlet?.show(UserLocationButtonUI.hilighted)
+                self?.outlet?.showUserCurrentLocationOnMap()
+            case .off:
+                self?.outlet?.show(UserLocationButtonUI.disabled)
+            case .undefined:
+                self?.outlet?.show(UserLocationButtonUI.normal)
+            }
+        }
+    }
+
     // MARK: - Internals
 
     private func handleFetchResponse(entities: [EatOutLocationEntity]?, error: Error?) {
+
+        var completion: ()->Void = {}
+
+        defer {
+            dispatchMain { completion() }
+        }
 
         guard let entities = entities else {
 
@@ -102,7 +145,7 @@ class EatOutFinder {
             }
 
             dispatchMain {
-                self.outlet?.show(errorUI)
+                completion = { self.outlet?.show(errorUI) }
             }
 
             return
@@ -111,7 +154,7 @@ class EatOutFinder {
 
         dispatchMain {
             let items = entities.map { EatOutFinderItemUI(entity: $0) }
-            self.outlet?.show( items )
+            completion = { self.outlet?.show( items ) }
         }
 
     }
@@ -170,8 +213,6 @@ class EatOutNetworkGeoJSONGateway: EatOutFinderGateway {
 
 class EatOutNetworkGeoJSONDataSession {
 
-    // MARK: Properties
-
     fileprivate typealias FetchDataCompletion = (_ : [GeoJSONFeature]?, _ : Error?) -> Swift.Void
 
     private let dataURL = URL(string: "https://beny23.github.io/static-distance-app/restaurants.geojson.gz")!
@@ -181,11 +222,13 @@ class EatOutNetworkGeoJSONDataSession {
     }()
 
     lazy private var session: URLSession = {
-        URLSession(configuration: URLSessionConfiguration.default, delegate: downloadManager, delegateQueue: nil )
+        let configuration = URLSessionConfiguration.default
+        configuration.waitsForConnectivity = true
+        return URLSession(configuration: configuration, delegate: downloadManager, delegateQueue: nil )
     }()
 
     private var fetchCompletion: FetchDataCompletion?
-    private var downloadTask: URLSessionDownloadTask?
+    private var dataTask: URLSessionDownloadTask?
 
     // MARK: API
 
@@ -197,8 +240,9 @@ class EatOutNetworkGeoJSONDataSession {
     // MARK: Internals
 
     private func fetchJSON() {
-        downloadTask = session.downloadTask(with: dataURL)
-        downloadTask?.resume()
+        AppLogger.logCache()
+        dataTask = session.downloadTask(with: dataURL)
+        dataTask?.resume()
     }
 
     private func decodeJSON(data: Data) {

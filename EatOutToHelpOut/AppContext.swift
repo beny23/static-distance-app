@@ -5,7 +5,7 @@ class EatOutAppContext {
     static let shared = EatOutAppContext()
 
     func start() {
-
+        observeAppStateChanges()
         configureMainViewController()
 
     }
@@ -18,9 +18,7 @@ class EatOutAppContext {
     }
 
     private func configureMainViewController() {
-
-        let gateway = EatOutNetworkGeoJSONGateway()
-        let interactor = EatOutFinder(gateway: gateway)
+        let interactor = EatOutFinder(gateway: EatOutNetworkGeoJSONGateway(), locationGateway: CoreLocationGateway() )
         let mainViewController = self.mainViewController
         mainViewController.interactor = interactor
         interactor.outlet = mainViewController
@@ -29,6 +27,13 @@ class EatOutAppContext {
 
     func configureWebViewController(_ controller: WebViewController, source: WebViewControllerDataSource) {
         controller.dataSource = source
+    }
+
+    private func observeAppStateChanges() {
+        NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { (n) in
+            AppLogger.log(object: self, function: #function, message: n.description)
+            self.mainViewController.interactor.updateUI()
+        }
     }
 
 }

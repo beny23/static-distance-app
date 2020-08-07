@@ -15,15 +15,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="mutedStandard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-Yd-g46">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="mutedStandard" showsUserLocation="YES" showsCompass="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-Yd-g46">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="W3N-sj-xKA"/>
                                 </connections>
                             </mapView>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FQA-77-0Sw">
+                                <rect key="frame" x="350" y="64" width="44" height="44"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="Bxu-nP-Zjr"/>
+                                    <constraint firstAttribute="height" constant="44" id="SfH-6j-ZPF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <state key="normal" image="location.circle" catalog="system">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="bold"/>
+                                </state>
+                                <state key="selected" image="location.circle.fill" catalog="system"/>
+                                <state key="highlighted" image="location.circle.fill" catalog="system"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="locationButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JeM-eH-cm2"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FQA-77-0Sw" secondAttribute="trailing" constant="20" id="BJK-JT-M1L"/>
+                            <constraint firstItem="FQA-77-0Sw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="F4n-La-3eP"/>
                             <constraint firstItem="Xv7-Yd-g46" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aAp-Fy-M33"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Xv7-Yd-g46" secondAttribute="trailing" id="kxN-Dx-Btf"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="Xv7-Yd-g46" secondAttribute="top" constant="44" id="rn5-4r-kEQ"/>
@@ -32,6 +56,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="locationButton" destination="FQA-77-0Sw" id="fpm-KH-ap6"/>
                         <outlet property="mapView" destination="Xv7-Yd-g46" id="YmK-A1-qPe"/>
                         <segue destination="kGj-NC-eST" kind="presentation" identifier="WebViewSegueIdentifier" id="1v4-TW-pwZ"/>
                     </connections>
@@ -94,4 +119,8 @@
             <point key="canvasLocation" x="1060.8695652173915" y="138.61607142857142"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="location.circle" catalog="system" width="128" height="121"/>
+        <image name="location.circle.fill" catalog="system" width="128" height="121"/>
+    </resources>
 </document>

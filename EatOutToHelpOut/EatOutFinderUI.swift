@@ -6,6 +6,7 @@ class EatOutMapViewController: StoryboardSegueViewController {
     static let MapAnnotationReuseIdentifier = NSStringFromClass(EatOutFinderItemUI.self)
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var locationButton: UIButton!
 
     var interactor: EatOutFinder!
     var items: [EatOutFinderItemUI] = [EatOutFinderItemUI]()
@@ -17,7 +18,18 @@ class EatOutMapViewController: StoryboardSegueViewController {
         interactor.load()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        interactor.updateUI()
+    }
+
+    // MARK: Actions
+
+    @IBAction func locationButtonAction(_ sender: Any) {
+        interactor.updateLocation()
+    }
+
     private func configureMap() {
+        mapView.showsUserLocation = true
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
         MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.HW)
     }
@@ -28,6 +40,33 @@ extension EatOutMapViewController: WebViewControllerDataSource {
 }
 
 extension EatOutMapViewController: EatOutFinderOutlet {
+
+
+    func show(_ locationButtonUI : UserLocationButtonUI) {
+        switch locationButtonUI {
+        case .disabled:
+            locationButton.isEnabled = false
+            locationButton.isSelected = false
+        case .normal:
+            locationButton.isEnabled = true
+            locationButton.isSelected = false
+        case .hilighted:
+            locationButton.isEnabled = true
+            locationButton.isSelected = true
+        }
+    }
+
+    func showUserCurrentLocationOnMap() {
+        if let userLocationCoords = mapView.userLocation.location?.coordinate {
+            let userMapPoint = MKMapPoint(userLocationCoords)
+            let userLocationWithinBounds = mapView.cameraBoundary?.mapRect.contains(userMapPoint) ?? true
+            if  userLocationWithinBounds {
+                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.LOW )
+                mapView.setRegion(region, animated: true)
+            }
+        }
+    }
+
 
     func show(_ url: URL, title: String) {
         self.webViewURL = url
@@ -49,6 +88,10 @@ extension EatOutMapViewController: EatOutFinderOutlet {
         present(alert, animated: true, completion: nil)
     }
 
+    func show(_: EatOutFinderDownloadStateUI) {
+        //MARK: TODO Handle loading start stop states
+    }
+
 }
 
 extension EatOutFinderItemUI: MKAnnotation {
@@ -58,6 +101,13 @@ extension EatOutFinderItemUI: MKAnnotation {
 extension EatOutMapViewController: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+
+        // Use default user location annotation view
+        
+        if mapView.userLocation == annotation as? MKUserLocation {
+            return nil
+        }
+
         let identifier = Self.MapAnnotationReuseIdentifier
         let view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier, for: annotation)
         if let dequedView = view as? MKMarkerAnnotationView {
@@ -124,13 +174,13 @@ extension CLLocationCoordinate2D {
 }
 
 extension MKCoordinateSpan {
-    static let UK = MKCoordinateSpan(latitudeDelta: 14.83, longitudeDelta: 12.22)
-    static let HW = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+    static let HIGH = MKCoordinateSpan(latitudeDelta: 14.83, longitudeDelta: 12.22)
+    static let LOW = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 
 extension MKCoordinateRegion {
-    static let UK = MKCoordinateRegion(center: CLLocationCoordinate2D.UK, span: MKCoordinateSpan.UK)
-    static let HW = MKCoordinateRegion(center: CLLocationCoordinate2D.HW, span: MKCoordinateSpan.HW)
+    static let UK = MKCoordinateRegion(center: CLLocationCoordinate2D.UK, span: MKCoordinateSpan.HIGH)
+    static let HW = MKCoordinateRegion(center: CLLocationCoordinate2D.HW, span: MKCoordinateSpan.LOW)
 }
 
 extension CLLocationDistance {
