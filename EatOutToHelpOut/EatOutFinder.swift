@@ -4,6 +4,7 @@ import MapKit
 protocol EatOutFinderOutlet: AnyObject {
     func show(_ : ErrorUI)
     func show(_ : [EatOutFinderItemUI])
+    func show(_ : URL)
 }
 
 enum EatOutFinderDataError: Error {
@@ -27,7 +28,6 @@ enum EatOutFinderDataError: Error {
 
 }
 
-
 // MARK: - Interactor
 
 protocol EatOutFinderGateway: AnyObject {
@@ -41,16 +41,24 @@ protocol EatOutFinderGateway: AnyObject {
 class EatOutFinderItemUI: NSObject {
 
     let coordinate: CLLocationCoordinate2D
-
     let name: String
+    let poscode: String
 
     fileprivate init(entity: EatOutLocationEntity) {
-
         self.coordinate = CLLocationCoordinate2D(latitude: entity.coordinate.lat, longitude: entity.coordinate.long)
         self.name = entity.name
-
+        self.poscode = entity.postcode
     }
 
+}
+
+fileprivate extension EatOutFinderItemUI {
+    var searchURL: URL {
+        let host =  URL(string: "https://duckduckgo.com")!
+        var components = URLComponents(url: host, resolvingAgainstBaseURL: true)!
+        components.queryItems = [ URLQueryItem(name: "q", value: "\\\(self.name) \(self.poscode)") ]
+        return components.url!
+    }
 }
 
 class EatOutFinder {
@@ -65,12 +73,22 @@ class EatOutFinder {
 
     }
 
+    // MARK: - Actions
+
     func load() {
 
         AppLogger.log(object: self, function: #function)
         gateway.fetchLocations(completion: handleFetchResponse)
 
     }
+    
+    func didSelectItem(item: EatOutFinderItemUI) {
+
+        outlet?.show(item.searchURL)
+
+    }
+
+    // MARK: - Internals
 
     private func handleFetchResponse(entities: [EatOutLocationEntity]?, error: Error?) {
 
@@ -113,6 +131,7 @@ struct EatOutLocationEntity {
 
     let coordinate: (lat: Double, long: Double)
     let name: String
+    let postcode: String
 
 }
 
@@ -138,7 +157,8 @@ class EatOutNetworkGeoJSONGateway: EatOutFinderGateway {
         let entities = features.map { (f) -> EatOutLocationEntity in
             let coordinate = (f.geometry.lat, f.geometry.long)
             let name = f.properties.name
-            return EatOutLocationEntity(coordinate: coordinate, name: name)
+            let postcode = f.properties.postcode
+            return EatOutLocationEntity(coordinate: coordinate, name: name, postcode: postcode)
         }
 
         completion?(entities, nil)

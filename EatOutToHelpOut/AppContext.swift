@@ -2,6 +2,8 @@ import UIKit
 
 class EatOutAppContext {
 
+    static let shared = EatOutAppContext()
+
     func start() {
 
         configureMainViewController()
@@ -24,6 +26,11 @@ class EatOutAppContext {
         interactor.outlet = mainViewController
 
     }
+
+    func configureWebViewController(_ controller: WebViewController, source: WebViewControllerDataSource) {
+        controller.dataSource = source
+    }
+
 }
 
 extension AppDelegate {
@@ -35,3 +42,4 @@ extension AppDelegate {
     }
 
 }
+

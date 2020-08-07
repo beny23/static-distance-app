@@ -33,11 +33,46 @@
                     </view>
                     <connections>
                         <outlet property="mapView" destination="Xv7-Yd-g46" id="YmK-A1-qPe"/>
+                        <segue destination="kGj-NC-eST" kind="presentation" identifier="WebViewSegueIdentifier" id="1v4-TW-pwZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="138.61607142857142"/>
+        </scene>
+        <!--Web View Controller-->
+        <scene sceneID="vsN-Cp-3Wi">
+            <objects>
+                <viewController id="kGj-NC-eST" customClass="WebViewController" customModule="EatOutToHelpOut" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0ZZ-Ce-yPj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-P7-WGe">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="bbW-P7-WGe" secondAttribute="bottom" id="5L6-Eb-ffc"/>
+                            <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="bbW-P7-WGe" secondAttribute="trailing" id="7Xb-cQ-0Ct"/>
+                            <constraint firstItem="bbW-P7-WGe" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="XfD-xY-yAe"/>
+                            <constraint firstItem="bbW-P7-WGe" firstAttribute="top" secondItem="CgD-6Z-Shc" secondAttribute="top" id="wgx-RR-ng0"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="CgD-6Z-Shc"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="bbW-P7-WGe" id="PdR-2z-56G"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vee-nZ-2Xh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1060.8695652173915" y="138.61607142857142"/>
         </scene>
     </scenes>
 </document>

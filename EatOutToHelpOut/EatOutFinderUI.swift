@@ -1,12 +1,15 @@
 import UIKit
 import MapKit
 
-class EatOutMapViewController: UIViewController {
+class EatOutMapViewController: StoryboardSegueViewController {
 
-    static let MapPinReuseIdentifier = "MKMapAnnotationViewIdentifier"
+    static let MapAnnotationReuseIdentifier = NSStringFromClass(EatOutFinderItemUI.self)
+
     @IBOutlet weak var mapView: MKMapView!
+
     var interactor: EatOutFinder!
     var items: [EatOutFinderItemUI] = [EatOutFinderItemUI]()
+    var webViewURL: URL?
 
     override func viewDidLoad() {
         configureMap()
@@ -14,17 +17,20 @@ class EatOutMapViewController: UIViewController {
     }
 
     private func configureMap() {
-        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapPinReuseIdentifier)
+        mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
         MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.HW)
     }
-    
+
 }
 
-extension EatOutFinderItemUI: MKAnnotation {
-    var title: String? { return name }
-}
+extension EatOutMapViewController: WebViewControllerDataSource {}
 
 extension EatOutMapViewController: EatOutFinderOutlet {
+
+    func show(_ url: URL) {
+        self.webViewURL = url
+        performSegue(withIdentifier: SegueIdentifier.WebViewSegueIdentifier.rawValue, sender: self)
+    }
 
     func show(_ items : [EatOutFinderItemUI]) {
         self.items = items
@@ -42,18 +48,20 @@ extension EatOutMapViewController: EatOutFinderOutlet {
 
 }
 
+extension EatOutFinderItemUI: MKAnnotation {
+    var title: String? { return name }
+}
+
 extension EatOutMapViewController: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let identifier = Self.MapPinReuseIdentifier
-        if let dequedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
-            dequedView.annotation = annotation
-            return dequedView
-        } else {
-            let view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            view.displayPriority = .defaultLow
-            return view
+        let identifier = Self.MapAnnotationReuseIdentifier
+        let view = mapView.dequeueReusableAnnotationView(withIdentifier: identifier, for: annotation)
+        if let dequedView = view as? MKMarkerAnnotationView {
+            dequedView.displayPriority = .defaultLow // optimisation not sure?
+            configureAnnotationCallout(dequedView)
         }
+        return view
     }
 
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -64,7 +72,20 @@ extension EatOutMapViewController: MKMapViewDelegate {
         }
     }
 
-    func showAnnotations(rect: MKMapRect) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        AppLogger.log(object: self, function: #function)
+        guard let item = view.annotation as? EatOutFinderItemUI else  { return }
+        interactor.didSelectItem(item: item)
+    }
+    
+    private func configureAnnotationCallout(_ markerAnnotationView: MKMarkerAnnotationView) {
+        markerAnnotationView.isEnabled = true
+        markerAnnotationView.canShowCallout = true
+        markerAnnotationView.animatesWhenAdded = true
+        markerAnnotationView.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+    }
+
+    private func showAnnotations(rect: MKMapRect) {
 
         // Cut Annotations No Longer Being Displayed
 
@@ -93,6 +114,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
 extension CLLocationDegrees {
     static let ZoomThreshold = 0.15
 }
+
 extension CLLocationCoordinate2D {
     static let UK = CLLocationCoordinate2D(latitude: 54.093409, longitude: -2.89479)
     static let HW = CLLocationCoordinate2D(latitude: 51.6267, longitude: -0.7435)
@@ -131,8 +153,8 @@ class MapViewConfiguration {
 
     static func constrainMapBoundariesToUnitedKingdom(_ map: MKMapView) {
         map.cameraBoundary = MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion.UK)
-        map.cameraZoomRange = MKMapView.CameraZoomRange(minCenterCoordinateDistance:  CLLocationDistance.UKZoomMin,
-                                                        maxCenterCoordinateDistance: CLLocationDistance.UKZoomMax)
+        map.cameraZoomRange = MKMapView.CameraZoomRange(minCenterCoordinateDistance:  CLLocationDistance.UKZoomMin, maxCenterCoordinateDistance: CLLocationDistance.UKZoomMax)
     }
 
 }
+
