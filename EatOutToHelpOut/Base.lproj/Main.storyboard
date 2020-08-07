@@ -56,17 +56,36 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Zax-6W-wHE">
+                                <rect key="frame" x="148" y="387.5" width="118" height="67.5"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="b6P-L1-WcS">
+                                        <rect key="frame" x="40.5" y="0.0" width="37" height="37"/>
+                                        <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Searching web" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vw-Wk-Xbm">
+                                        <rect key="frame" x="0.0" y="47" width="118" height="20.5"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="bbW-P7-WGe" secondAttribute="bottom" id="5L6-Eb-ffc"/>
                             <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="bbW-P7-WGe" secondAttribute="trailing" id="7Xb-cQ-0Ct"/>
+                            <constraint firstItem="Zax-6W-wHE" firstAttribute="centerX" secondItem="0ZZ-Ce-yPj" secondAttribute="centerX" id="ShR-5V-ufg"/>
+                            <constraint firstItem="Zax-6W-wHE" firstAttribute="centerY" secondItem="0ZZ-Ce-yPj" secondAttribute="centerY" id="Tmm-7x-sfx"/>
                             <constraint firstItem="bbW-P7-WGe" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="XfD-xY-yAe"/>
                             <constraint firstItem="bbW-P7-WGe" firstAttribute="top" secondItem="CgD-6Z-Shc" secondAttribute="top" id="wgx-RR-ng0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CgD-6Z-Shc"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicicator" destination="b6P-L1-WcS" id="a8O-gi-BxW"/>
+                        <outlet property="label" destination="4vw-Wk-Xbm" id="hw0-SL-mGb"/>
                         <outlet property="webView" destination="bbW-P7-WGe" id="PdR-2z-56G"/>
                     </connections>
                 </viewController>

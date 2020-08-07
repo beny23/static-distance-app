@@ -10,6 +10,7 @@ class EatOutMapViewController: StoryboardSegueViewController {
     var interactor: EatOutFinder!
     var items: [EatOutFinderItemUI] = [EatOutFinderItemUI]()
     var webViewURL: URL?
+    var searchTerm: String?
 
     override func viewDidLoad() {
         configureMap()
@@ -23,12 +24,14 @@ class EatOutMapViewController: StoryboardSegueViewController {
 
 }
 
-extension EatOutMapViewController: WebViewControllerDataSource {}
+extension EatOutMapViewController: WebViewControllerDataSource {
+}
 
 extension EatOutMapViewController: EatOutFinderOutlet {
 
-    func show(_ url: URL) {
+    func show(_ url: URL, title: String) {
         self.webViewURL = url
+        self.searchTerm = title
         performSegue(withIdentifier: SegueIdentifier.WebViewSegueIdentifier.rawValue, sender: self)
     }
 

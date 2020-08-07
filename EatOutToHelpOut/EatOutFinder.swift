@@ -4,7 +4,7 @@ import MapKit
 protocol EatOutFinderOutlet: AnyObject {
     func show(_ : ErrorUI)
     func show(_ : [EatOutFinderItemUI])
-    func show(_ : URL)
+    func show(_ : URL, title: String)
 }
 
 enum EatOutFinderDataError: Error {
@@ -84,7 +84,7 @@ class EatOutFinder {
     
     func didSelectItem(item: EatOutFinderItemUI) {
 
-        outlet?.show(item.searchURL)
+        outlet?.show(item.searchURL, title: item.name)
 
     }
 
