@@ -36,7 +36,7 @@ class WebViewController : UIViewController {
     }
 
     private func configureLabel() {
-        label.text = "Searching for \"\(dataSource?.searchTerm ?? "<<Error>>")\"..."
+        label.text = "Searching for \"\(dataSource?.searchTerm ?? "<<Error>>")\""
     }
 
     private func loadURL() {
@@ -74,17 +74,27 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
 
-        guard navigationAction.navigationType == .other else { decisionHandler(.cancel); return }
-        let isSearchEngineRedirect = requestMatchesDataSourceURL(request: navigationAction.request)
-        let isSearchResultDestination = webSearchRedirectNavigationAction != nil && !isSearchEngineRedirect
-        let policy: WKNavigationActionPolicy = ( isSearchEngineRedirect || isSearchResultDestination ) ? .allow : .cancel
-        if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
-
-        if policy == .cancel { AppLogger.log(object: self, function: #function, message: "FILTERED: \(String(describing: navigationAction.request.url?.host))")}
-
-        decisionHandler(policy)
+        let allow = isSearchRedirectOrResult(navigationAction)
+        decisionHandler(allow ? .allow : .cancel)
+        handleDialOut(navigationAction)
 
     }
+
+    private func handleDialOut(_ navigationAction: WKNavigationAction) {
+        let isDialRequest = navigationAction.request.url?.scheme == "tel"
+        if isDialRequest {
+            UIApplication.shared.open(navigationAction.request.url!, options: [:], completionHandler: nil);
+        }
+    }
+
+    private func isSearchRedirectOrResult(_ navigationAction: WKNavigationAction) -> Bool {
+        let isSearchEngineRedirect = requestMatchesDataSourceURL(request: navigationAction.request)
+        let isSearchResultPage = webSearchRedirectNavigationAction != nil && !isSearchEngineRedirect
+        if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
+        return ( isSearchEngineRedirect || isSearchResultPage )
+    }
+
+
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         AppLogger.log(object: self, function: #function, message: "WEBVIEW NAVIGATION: \(String(describing: navigationResponse.response.url?.host))")
