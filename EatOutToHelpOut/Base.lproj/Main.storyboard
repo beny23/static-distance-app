@@ -129,7 +129,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Badge" width="130" height="130"/>
+        <image name="Badge" width="65" height="65"/>
         <image name="location.circle" catalog="system" width="128" height="121"/>
         <image name="location.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
