@@ -32,6 +32,7 @@ class EatOutAppContext {
     private func observeAppStateChanges() {
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { (n) in
             AppLogger.log(object: self, function: #function, message: n.description)
+            self.mainViewController.interactor.load()
             self.mainViewController.interactor.updateUI()
         }
     }
