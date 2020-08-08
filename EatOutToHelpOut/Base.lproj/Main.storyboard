@@ -22,7 +22,7 @@
                                 </connections>
                             </mapView>
                             <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FQA-77-0Sw">
-                                <rect key="frame" x="350" y="64" width="44" height="44"/>
+                                <rect key="frame" x="350" y="798" width="44" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="Bxu-nP-Zjr"/>
@@ -43,13 +43,22 @@
                                     <action selector="locationButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JeM-eH-cm2"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.90000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Badge" translatesAutoresizingMaskIntoConstraints="NO" id="Fqv-bv-0rv">
+                                <rect key="frame" x="329" y="54" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="XO0-F9-KWM"/>
+                                    <constraint firstAttribute="height" constant="65" id="z97-Ui-j1y"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FQA-77-0Sw" secondAttribute="trailing" constant="20" id="BJK-JT-M1L"/>
-                            <constraint firstItem="FQA-77-0Sw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="F4n-La-3eP"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fqv-bv-0rv" secondAttribute="trailing" constant="20" id="BOj-UT-gJI"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FQA-77-0Sw" secondAttribute="bottom" constant="20" id="H0F-jz-svJ"/>
                             <constraint firstItem="Xv7-Yd-g46" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aAp-Fy-M33"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Xv7-Yd-g46" secondAttribute="trailing" id="kxN-Dx-Btf"/>
+                            <constraint firstItem="Fqv-bv-0rv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="lgv-0b-Z8T"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="Xv7-Yd-g46" secondAttribute="top" constant="44" id="rn5-4r-kEQ"/>
                             <constraint firstItem="Xv7-Yd-g46" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="34" id="utf-Pl-CGq"/>
                         </constraints>
@@ -120,6 +129,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Badge" width="130" height="130"/>
         <image name="location.circle" catalog="system" width="128" height="121"/>
         <image name="location.circle.fill" catalog="system" width="128" height="121"/>
     </resources>

@@ -45,12 +45,15 @@ extension EatOutMapViewController: EatOutFinderOutlet {
     func show(_ locationButtonUI : UserLocationButtonUI) {
         switch locationButtonUI {
         case .disabled:
+            locationButton.tintColor = .systemGray
             locationButton.isEnabled = false
             locationButton.isSelected = false
         case .normal:
+            locationButton.tintColor = .systemGray
             locationButton.isEnabled = true
             locationButton.isSelected = false
         case .hilighted:
+            locationButton.tintColor = .systemBlue
             locationButton.isEnabled = true
             locationButton.isSelected = true
         }
