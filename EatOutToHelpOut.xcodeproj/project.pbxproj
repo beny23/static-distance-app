@@ -23,6 +23,7 @@
 		8CDF212824DB033A0031E6D2 /* GZIP in Frameworks */ = {isa = PBXBuildFile; productRef = 8CDF212724DB033A0031E6D2 /* GZIP */; };
 		8CDF212A24DBE9FC0031E6D2 /* ErrorUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDF212924DBE9FC0031E6D2 /* ErrorUI.swift */; };
 		8CDF212C24DBF8330031E6D2 /* JSONFileDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */; };
+		8CF0DE9924DF0AA10046E738 /* DownloadTaskURLSessionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF0DE9824DF0AA10046E738 /* DownloadTaskURLSessionConfiguration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EatOutGeoJsonGateway.swift; sourceTree = "<group>"; };
 		8CDF212924DBE9FC0031E6D2 /* ErrorUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUI.swift; sourceTree = "<group>"; };
 		8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFileDownloadManager.swift; sourceTree = "<group>"; };
+		8CF0DE9824DF0AA10046E738 /* DownloadTaskURLSessionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTaskURLSessionConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,8 +105,9 @@
 				8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */,
 				8C18711F24DACC4800CA919B /* EatOutFinder.swift */,
 				8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */,
-				8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */,
 				8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */,
+				8CF0DE9824DF0AA10046E738 /* DownloadTaskURLSessionConfiguration.swift */,
+				8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */,
 				8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */,
 				8C1870FF24DAB32100CA919B /* Main.storyboard */,
 				8C18710224DAB32500CA919B /* Assets.xcassets */,
@@ -243,6 +246,7 @@
 				8CDF212A24DBE9FC0031E6D2 /* ErrorUI.swift in Sources */,
 				8CB60FE024DE895E00FC6F74 /* EatOutGeoJsonGateway.swift in Sources */,
 				8C1870FA24DAB32100CA919B /* AppDelegate.swift in Sources */,
+				8CF0DE9924DF0AA10046E738 /* DownloadTaskURLSessionConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

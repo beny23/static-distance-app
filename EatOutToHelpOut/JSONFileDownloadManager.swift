@@ -3,7 +3,7 @@ import GZIP
 
 protocol JSONFileDownloadManagerDelegate: AnyObject {
 
-    func downloadManager(_ manager: URLSessionJSONFileDownloadManager, didDownload data: Data?, error: Error?)
+    func downloadManager(_ manager: JSONFileDownloadManager, didDownload data: Data?, task: URLSessionTask, error: Error?)
 
 }
 
@@ -14,7 +14,7 @@ enum JSONFileDownloadManagerError: Error {
 
 }
 
-class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionTaskDelegate {
+class JSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionTaskDelegate {
 
     let delegate: JSONFileDownloadManagerDelegate
 
@@ -25,11 +25,9 @@ class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, U
     //MARK: URLSessionTaskDelegate
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        AppLogger.log(object: self, function: #function)
-        guard let error = error else { return }
+        guard let error = error else { AppLogger.log(object: self, function: #function); return }
         AppLogger.log(object: self, function: #function, error: error)
     }
-
 
     //MARK: URLSessionDownloadDelegate
 
@@ -37,16 +35,32 @@ class URLSessionJSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, U
 
         AppLogger.log(object: self, function: #function, message: "Status Code:\((downloadTask.response as! HTTPURLResponse).statusCode)")
 
-        AppLogger.logCache()
+
+        // Not Modified, Bail Early
+
+        if let status = (downloadTask.response as? HTTPURLResponse)?.statusCode {
+
+            switch status {
+            case 304:
+                let data = try? readData(file: Self.DocumentsDirectoryDataFileURL)
+                self.delegate.downloadManager(self, didDownload: data, task: downloadTask, error: nil)
+                return
+            default:
+                break
+            }
+
+        }
+
+        // Read Downloaded File Data
 
         do {
             let tmpDownloadedFileHandle = try FileHandle(forReadingFrom: location)
             readFileAsync(file: tmpDownloadedFileHandle) { data, error in
-                self.delegate.downloadManager(self, didDownload: data, error: error)
+                self.delegate.downloadManager(self, didDownload: data, task: downloadTask, error: error)
                 try? tmpDownloadedFileHandle.close()
             }
         } catch {
-            self.delegate.downloadManager(self, didDownload: nil, error: error)
+            self.delegate.downloadManager(self, didDownload: nil, task: downloadTask, error: error)
         }
 
 

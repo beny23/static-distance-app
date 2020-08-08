@@ -40,16 +40,11 @@ class EatOutNetworkGeoJSONDataSession {
 
     private let dataURL = URL(string: "https://beny23.github.io/static-distance-app/restaurants.geojson.gz")!
 
-    lazy private var downloadManager: URLSessionJSONFileDownloadManager = {
-        URLSessionJSONFileDownloadManager(delegate: self)
+    lazy private var downloadManager: JSONFileDownloadManager = {
+        JSONFileDownloadManager(delegate: self)
     }()
 
-    lazy private var session: URLSession = {
-        let configuration = URLSessionConfiguration.default
-        configuration.waitsForConnectivity = true
-        return URLSession(configuration: configuration, delegate: downloadManager, delegateQueue: nil )
-    }()
-
+    private var session: URLSession?
     private var fetchCompletion: FetchDataCompletion?
     private var dataTask: URLSessionDownloadTask?
 
@@ -63,21 +58,34 @@ class EatOutNetworkGeoJSONDataSession {
     // MARK: Internals
 
     private func fetchJSON() {
-        AppLogger.logCache()
-        dataTask = session.downloadTask(with: dataURL)
+        createSession()
+        dataTask = session?.downloadTask(with: dataURL)
         dataTask?.resume()
     }
 
-    private func decodeJSON(data: Data) {
+    private func clearSession() {
+        session?.invalidateAndCancel()
+        session = nil
+    }
+
+    private func createSession() {
+        let configuration = URLSessionConfiguration.DownloadTaskCacheConfiguration
+        session = URLSession(configuration: configuration, delegate: downloadManager, delegateQueue: nil )
+    }
+
+    private func decodeJSON(data: Data) -> Bool {
 
         //TODO: Swap in MKGeoJSONDecoder as a less code alternative
 
         let decoder = JSONDecoder()
+
         do {
             let collection = try decoder.decode(GeoJSONFeatureCollection.self, from: data)
             complete(with: collection)
+            return true
         } catch {
             AppLogger.log(object: self, function: #function, error: error )
+            return false
         }
     }
 
@@ -102,7 +110,7 @@ class EatOutNetworkGeoJSONDataSession {
 
 extension EatOutNetworkGeoJSONDataSession: JSONFileDownloadManagerDelegate {
 
-    func downloadManager(_ manager: URLSessionJSONFileDownloadManager, didDownload data: Data?, error: Error?) {
+    func downloadManager(_ manager: JSONFileDownloadManager, didDownload data: Data?, task: URLSessionTask, error: Error?) {
 
         AppLogger.log(object: self, function: #function)
 
@@ -115,8 +123,15 @@ extension EatOutNetworkGeoJSONDataSession: JSONFileDownloadManagerDelegate {
             return
         }
 
-        decodeJSON(data: data)
+        let success = decodeJSON(data: data)
 
+        if success {
+            URLSessionConfiguration.modifyDownloadTaskCacheHeaders(for: task.response)
+        } else {
+            URLSessionConfiguration.resetDownloadTaskCacheHeaders()
+        }
+
+        clearSession()
     }
 
 }
