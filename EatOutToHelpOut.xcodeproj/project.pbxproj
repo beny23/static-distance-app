@@ -19,6 +19,7 @@
 		8CB60FDA24DC5AC300FC6F74 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */; };
 		8CB60FDC24DC8F7C00FC6F74 /* StoryboardUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */; };
 		8CB60FDE24DDACF200FC6F74 /* CoreLocationGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */; };
+		8CB60FE024DE895E00FC6F74 /* EatOutGeoJsonGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */; };
 		8CDF212824DB033A0031E6D2 /* GZIP in Frameworks */ = {isa = PBXBuildFile; productRef = 8CDF212724DB033A0031E6D2 /* GZIP */; };
 		8CDF212A24DBE9FC0031E6D2 /* ErrorUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDF212924DBE9FC0031E6D2 /* ErrorUI.swift */; };
 		8CDF212C24DBF8330031E6D2 /* JSONFileDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */; };
@@ -51,6 +52,7 @@
 		8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardUI.swift; sourceTree = "<group>"; };
 		8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationGateway.swift; sourceTree = "<group>"; };
+		8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EatOutGeoJsonGateway.swift; sourceTree = "<group>"; };
 		8CDF212924DBE9FC0031E6D2 /* ErrorUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUI.swift; sourceTree = "<group>"; };
 		8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFileDownloadManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +102,7 @@
 				8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */,
 				8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */,
 				8C18711F24DACC4800CA919B /* EatOutFinder.swift */,
+				8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */,
 				8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */,
 				8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */,
 				8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */,
@@ -238,6 +241,7 @@
 				8C18711E24DAB50800CA919B /* AppContext.swift in Sources */,
 				8C18711C24DAB35D00CA919B /* EatOutFinderUI.swift in Sources */,
 				8CDF212A24DBE9FC0031E6D2 /* ErrorUI.swift in Sources */,
+				8CB60FE024DE895E00FC6F74 /* EatOutGeoJsonGateway.swift in Sources */,
 				8C1870FA24DAB32100CA919B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
