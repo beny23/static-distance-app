@@ -29,9 +29,9 @@ class EatOutMapViewController: StoryboardSegueViewController {
     }
 
     private func configureMap() {
-        mapView.showsUserLocation = true
+        MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.UK)
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
-        MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.HW)
+        mapView.showsUserLocation = true
     }
 
 }
@@ -132,6 +132,10 @@ extension EatOutMapViewController: MKMapViewDelegate {
         AppLogger.log(object: self, function: #function)
         guard let item = view.annotation as? EatOutFinderItemUI else  { return }
         interactor.didSelectItem(item: item)
+    }
+
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        <#code#>
     }
     
     private func configureAnnotationCallout(_ markerAnnotationView: MKMarkerAnnotationView) {
