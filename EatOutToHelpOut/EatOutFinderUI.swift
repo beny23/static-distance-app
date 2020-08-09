@@ -6,12 +6,16 @@ class EatOutMapViewController: StoryboardSegueViewController {
     static let MapAnnotationReuseIdentifier = NSStringFromClass(EatOutFinderItemUI.self)
 
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var locationButton: UIButton!
+    @IBOutlet weak var enableUserTrackingButton: UIButton!
+    @IBOutlet weak var mapUserTrackingButtonContainer: UIView!
+
 
     var interactor: EatOutFinder!
     var items: [EatOutFinderItemUI] = [EatOutFinderItemUI]()
     var webViewURL: URL?
     var searchTerm: String?
+    var userTrackingButton: MKUserTrackingButton?
+    var shouldZoomOnUpdate = false
 
     override func viewDidLoad() {
         configureMap()
@@ -28,10 +32,24 @@ class EatOutMapViewController: StoryboardSegueViewController {
         interactor.updateLocation()
     }
 
+    @objc func userTrackingButtonTapped(sender: UIGestureRecognizer) {
+        interactor.updateLocation()
+    }
+
     private func configureMap() {
         MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.UK)
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
+    }
+
+    private func addSystemMapUserTrackingButton() {
+        userTrackingButton = MKUserTrackingButton(mapView: self.mapView)
+        mapUserTrackingButtonContainer.addSubview(userTrackingButton!)
         mapView.showsUserLocation = true
+    }
+
+    private func removeSystemMapUserTrackingButton() {
+        userTrackingButton?.removeFromSuperview()
+        userTrackingButton = nil
     }
 
 }
@@ -42,29 +60,37 @@ extension EatOutMapViewController: WebViewControllerDataSource {
 extension EatOutMapViewController: EatOutFinderOutlet {
 
 
-    func show(_ locationButtonUI : UserLocationButtonUI) {
+    func show(_ locationButtonUI : UserTrackingEnableButtonUI) {
+
         switch locationButtonUI {
         case .disabled:
-            locationButton.tintColor = .systemGray
-            locationButton.isEnabled = false
-            locationButton.isSelected = false
-        case .normal:
-            locationButton.tintColor = .systemGray
-            locationButton.isEnabled = true
-            locationButton.isSelected = false
-        case .hilighted:
-            locationButton.tintColor = .systemBlue
-            locationButton.isEnabled = true
-            locationButton.isSelected = true
+            configureEnableUserTrackingButton(isEnabled:false)
+        case .enabled:
+            configureEnableUserTrackingButton(isEnabled:true)
+        case .hidden:
+            enableUserTrackingButton.isHidden = true
         }
     }
 
-    func showUserCurrentLocationOnMap() {
+    func configureEnableUserTrackingButton(isEnabled: Bool) {
+        enableUserTrackingButton.isHidden = false
+        enableUserTrackingButton.isEnabled = isEnabled
+        enableUserTrackingButton.tintColor = (isEnabled) ? .systemBlue : .systemGray
+        removeSystemMapUserTrackingButton()
+    }
+
+    func showSystemMapUserTracking() {
+        guard userTrackingButton == nil else { return }
+        shouldZoomOnUpdate = true
+        addSystemMapUserTrackingButton()
+    }
+
+    func zoomToUserLocation() {
         if let userLocationCoords = mapView.userLocation.location?.coordinate {
             let userMapPoint = MKMapPoint(userLocationCoords)
             let userLocationWithinBounds = mapView.cameraBoundary?.mapRect.contains(userMapPoint) ?? true
             if  userLocationWithinBounds {
-                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.LOW )
+                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.MIDDLE )
                 mapView.setRegion(region, animated: true)
             }
         }
@@ -134,10 +160,28 @@ extension EatOutMapViewController: MKMapViewDelegate {
         interactor.didSelectItem(item: item)
     }
 
-    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        // Center...?
+    func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
+        AppLogger.log(object: self, function: #function)
     }
-    
+
+    func mapView(_ mapView: MKMapView, didFailToLocateUserWithError error: Error) {
+        AppLogger.log(object: self, function: #function, error: error)
+        show(.disabled)
+        removeSystemMapUserTrackingButton()
+    }
+
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        // ... we are tracking
+        if shouldZoomOnUpdate {
+            zoomToUserLocation()
+            shouldZoomOnUpdate = false
+        }
+    }
+
+    func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
+        removeSystemMapUserTrackingButton()
+    }
+
     private func configureAnnotationCallout(_ markerAnnotationView: MKMarkerAnnotationView) {
         markerAnnotationView.isEnabled = true
         markerAnnotationView.canShowCallout = true
@@ -182,6 +226,7 @@ extension CLLocationCoordinate2D {
 
 extension MKCoordinateSpan {
     static let HIGH = MKCoordinateSpan(latitudeDelta: 14.83, longitudeDelta: 12.22)
+    static let MIDDLE = MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025)
     static let LOW = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 }
 

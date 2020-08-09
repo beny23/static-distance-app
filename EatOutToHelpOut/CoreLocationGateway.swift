@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 
 enum UserLocationGatewayStatus {
-    case on, off, undefined
+    case on, off, undefined, initialising
 }
 
 protocol UserLocationGateway {
@@ -12,28 +12,47 @@ protocol UserLocationGateway {
 
 class CoreLocationGateway: NSObject, UserLocationGateway {
 
-    var locationManager: CLLocationManager = CLLocationManager()
+    var locationManager: CLLocationManager?
     var pendingLocationStatusCompletion: FetchUserLocationStatusCompletion?
     var authorisationStatus: CLAuthorizationStatus? = nil
 
-    override init(){
+    override init() {
         super.init()
-        locationManager.delegate = self
+        createLocationManager()
+    }
+
+    func reset() {
+        authorisationStatus = nil
+        createLocationManager()
+    }
+
+    private func createLocationManager() {
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
     }
 
     func fetchUserLocationStatus(requestsAuthorisation: Bool, completion: @escaping FetchUserLocationStatusCompletion) {
-        if let status = self.status {
-            completion(status)
-        }
 
-        if (status == nil  || status == .undefined) && requestsAuthorisation {
+//        if let status = self.status {
+//            AppLogger.log(object: self, function: #function, message: "Location Status \(status)")
+//            completion(status)
+//        }
+
+        if (self.status == nil  || status == .undefined) && requestsAuthorisation {
             requestAuthorisation(completion: completion)
+        } else if let status = self.status {
+            AppLogger.log(object: self, function: #function, message: "Skipped Authorisation Check")
+            completion(status )
+        } else {
+            AppLogger.log(object: self, function: #function, message: "Deferring update. Wainting for location manager status...")
+            pendingLocationStatusCompletion = completion
         }
     }
 
     func requestAuthorisation(completion: @escaping FetchUserLocationStatusCompletion) {
+        AppLogger.log(object: self, function: #function)
         pendingLocationStatusCompletion = completion
-        locationManager.requestWhenInUseAuthorization()
+        locationManager?.requestWhenInUseAuthorization()
     }
 
     var status: UserLocationGatewayStatus? {
@@ -57,8 +76,10 @@ class CoreLocationGateway: NSObject, UserLocationGateway {
 
     private func handlePendingPermissionRequest() {
         guard let status = self.status else { return }
-        pendingLocationStatusCompletion?( status )
-        pendingLocationStatusCompletion = nil
+        if let completion = pendingLocationStatusCompletion {
+            completion( status )
+            pendingLocationStatusCompletion = nil
+        }
     }
 
 }

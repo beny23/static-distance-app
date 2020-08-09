@@ -3,6 +3,7 @@ import UIKit
 class EatOutAppContext {
 
     static let shared = EatOutAppContext()
+    let locationGateway = CoreLocationGateway()
 
     func start() {
         observeAppStateChanges()
@@ -18,7 +19,7 @@ class EatOutAppContext {
     }
 
     private func configureMainViewController() {
-        let interactor = EatOutFinder(gateway: EatOutGeoJSONGateway(), locationGateway: CoreLocationGateway() )
+        let interactor = EatOutFinder(gateway: EatOutGeoJSONGateway(), locationGateway: locationGateway )
         let mainViewController = self.mainViewController
         mainViewController.interactor = interactor
         interactor.outlet = mainViewController
@@ -32,6 +33,7 @@ class EatOutAppContext {
     private func observeAppStateChanges() {
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { (n) in
             AppLogger.log(object: self, function: #function, message: n.description)
+            self.locationGateway.reset()
             self.mainViewController.interactor.load()
             self.mainViewController.interactor.updateUI()
         }

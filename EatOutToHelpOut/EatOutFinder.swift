@@ -6,8 +6,8 @@ enum EatOutFinderDownloadStateUI {
     case loading, finished
 }
 
-enum UserLocationButtonUI {
-    case disabled, normal, hilighted
+enum UserTrackingEnableButtonUI {
+    case enabled, disabled, hidden
 }
 
 protocol EatOutFinderOutlet: AnyObject {
@@ -15,8 +15,8 @@ protocol EatOutFinderOutlet: AnyObject {
     func show(_ : [EatOutFinderItemUI])
     func show(_ : URL, title: String)
     func show(_ : EatOutFinderDownloadStateUI)
-    func show(_ : UserLocationButtonUI)
-    func showUserCurrentLocationOnMap()
+    func show(_ : UserTrackingEnableButtonUI)
+    func showSystemMapUserTracking()
 }
 
 enum EatOutFinderDataError: Error {
@@ -94,7 +94,11 @@ class EatOutFinder {
 
     func load() {
         AppLogger.log(object: self, function: #function)
-        outlet?.show(EatOutFinderDownloadStateUI.loading)
+        loadData()
+    }
+
+    func loadData() {
+        if !didLoad { outlet?.show(EatOutFinderDownloadStateUI.loading) }
         let fetchType: EatOutFetchType = didLoad ? .OnlyIfModified : .Default
         gateway.fetchLocations(type: fetchType, completion: handleFetchResponse)
     }
@@ -104,28 +108,29 @@ class EatOutFinder {
     }
 
     func didSelectItem(item: EatOutFinderItemUI) {
-
         outlet?.show(item.searchURL, title: item.name)
-
     }
 
     func updateLocation() {
-
         updateLocation(requestAuthorisation: true)
-        
     }
 
     private func updateLocation(requestAuthorisation: Bool) {
-        AppLogger.log(object: self, function: #function)
-        locationGateway.fetchUserLocationStatus(requestsAuthorisation: requestAuthorisation) { [weak self] (status) in
+        AppLogger.log(object: self, function: #function, message: "Update Location Status  (isRequestingPermission:\(requestAuthorisation))")
+        locationGateway.fetchUserLocationStatus(requestsAuthorisation: requestAuthorisation) { [unowned self] (status) in
             switch status {
             case .on:
-                self?.outlet?.show(UserLocationButtonUI.hilighted)
-                self?.outlet?.showUserCurrentLocationOnMap()
+                AppLogger.log(object: self, function: #function, message: "Location Status: On")
+                self.outlet?.show(UserTrackingEnableButtonUI.hidden)
+                self.outlet?.showSystemMapUserTracking()
             case .off:
-                self?.outlet?.show(UserLocationButtonUI.disabled)
+                AppLogger.log(object: self, function: #function, message: "Location Status: Off")
+                self.outlet?.show(UserTrackingEnableButtonUI.disabled)
             case .undefined:
-                self?.outlet?.show(UserLocationButtonUI.normal)
+                AppLogger.log(object: self, function: #function, message: "Location Status: Undefined")
+                self.outlet?.show(UserTrackingEnableButtonUI.enabled)
+            case .initialising:
+                break
             }
         }
     }
