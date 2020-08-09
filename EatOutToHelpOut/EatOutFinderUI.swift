@@ -135,7 +135,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
     }
 
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        <#code#>
+        // Center...?
     }
     
     private func configureAnnotationCallout(_ markerAnnotationView: MKMarkerAnnotationView) {

@@ -3,7 +3,7 @@ import GZIP
 
 protocol JSONFileDownloadManagerDelegate: AnyObject {
 
-    func downloadManager(_ manager: JSONFileDownloadManager, didDownload data: Data?, task: URLSessionTask, error: Error?)
+    func downloadManager(_ manager: JSONFileDownloadManager, didDownload data: Data?, task: URLSessionTask, notModified: Bool?, error: Error?)
 
 }
 
@@ -35,15 +35,15 @@ class JSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionT
 
         AppLogger.log(object: self, function: #function, message: "Status Code:\((downloadTask.response as! HTTPURLResponse).statusCode)")
 
-
         // Not Modified, Bail Early
 
         if let status = (downloadTask.response as? HTTPURLResponse)?.statusCode {
 
             switch status {
             case 304:
+                AppLogger.log(object: self, function: #function, message: "Status 304, Read Existing")
                 let data = try? readData(file: Self.DocumentsDirectoryDataFileURL)
-                self.delegate.downloadManager(self, didDownload: data, task: downloadTask, error: nil)
+                self.delegate.downloadManager(self, didDownload: data, task: downloadTask, notModified: true, error: nil)
                 return
             default:
                 break
@@ -51,16 +51,19 @@ class JSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionT
 
         }
 
+
         // Read Downloaded File Data
 
         do {
+            AppLogger.log(object: self, function: #function, message: "Read Downloaded Data..")
             let tmpDownloadedFileHandle = try FileHandle(forReadingFrom: location)
             readFileAsync(file: tmpDownloadedFileHandle) { data, error in
-                self.delegate.downloadManager(self, didDownload: data, task: downloadTask, error: error)
+                let notModified = (error != nil) ? false : nil
+                self.delegate.downloadManager(self, didDownload: data, task: downloadTask, notModified: notModified, error: nil)
                 try? tmpDownloadedFileHandle.close()
             }
         } catch {
-            self.delegate.downloadManager(self, didDownload: nil, task: downloadTask, error: error)
+            self.delegate.downloadManager(self, didDownload: nil, task: downloadTask, notModified: nil, error: error)
         }
 
 

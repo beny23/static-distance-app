@@ -42,11 +42,14 @@ enum EatOutFinderDataError: Error {
 
 // MARK: - Interactor
 
-protocol EatOutFinderGateway: AnyObject {
+enum EatOutFetchType {
+    case Default, OnlyIfModified
+}
+
+protocol EatOutGateway: AnyObject {
 
     typealias FetchLocationsCompletion = ([EatOutLocationEntity]?, Error?) -> Swift.Void
-
-    func fetchLocations(completion: @escaping FetchLocationsCompletion)
+    func fetchLocations(type: EatOutFetchType, completion: @escaping FetchLocationsCompletion)
 
 }
 
@@ -77,10 +80,11 @@ class EatOutFinder {
 
     weak var outlet: EatOutFinderOutlet?
 
-    let gateway: EatOutFinderGateway
+    let gateway: EatOutGateway
     let locationGateway: UserLocationGateway
-    
-    init(gateway: EatOutFinderGateway, locationGateway: UserLocationGateway) {
+    var didLoad: Bool = false
+
+    init(gateway: EatOutGateway, locationGateway: UserLocationGateway) {
 
         self.gateway = gateway
         self.locationGateway = locationGateway
@@ -91,7 +95,8 @@ class EatOutFinder {
     func load() {
         AppLogger.log(object: self, function: #function)
         outlet?.show(EatOutFinderDownloadStateUI.loading)
-        gateway.fetchLocations(completion: handleFetchResponse)
+        let fetchType: EatOutFetchType = didLoad ? .OnlyIfModified : .Default
+        gateway.fetchLocations(type: fetchType, completion: handleFetchResponse)
     }
 
     func updateUI() {
@@ -129,6 +134,8 @@ class EatOutFinder {
 
     private func handleFetchResponse(entities: [EatOutLocationEntity]?, error: Error?) {
 
+
+        
         var completion: ()->Void = {}
 
         defer {
@@ -137,25 +144,22 @@ class EatOutFinder {
 
         guard let entities = entities else {
 
-            let error = (error ?? EatOutFinderDataError.FetchUnexpectedError)
-
-            let errorUI = ErrorUI(error: error) { (actionTitle) in
-                AppLogger.log(object: self, function: #file, message: "TODO: Error Action Handle \(actionTitle)")
-                self.load()
-            }
-
-            dispatchMain {
+            // Response is nil unless modified, only error if we did not load
+            if !didLoad  {
+                let error = (error ?? EatOutFinderDataError.FetchUnexpectedError)
+                let errorUI = ErrorUI(error: error) { _ in self.load() }
                 completion = { self.outlet?.show(errorUI) }
+            } else {
+                AppLogger.log(object: self, function: #function, message: "Response unmodified")
             }
 
             return
 
         }
 
-        dispatchMain {
-            let items = entities.map { EatOutFinderItemUI(entity: $0) }
-            completion = { self.outlet?.show( items ) }
-        }
+        let items = entities.map { EatOutFinderItemUI(entity: $0) }
+        didLoad = true
+        completion = { self.outlet?.show( items ) }
 
     }
 

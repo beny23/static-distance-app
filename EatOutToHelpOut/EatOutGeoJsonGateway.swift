@@ -2,39 +2,47 @@ import Foundation
 
 // MARK: - GeoJSON Gateway
 
-class EatOutNetworkGeoJSONGateway: EatOutFinderGateway {
+class EatOutGeoJSONGateway: EatOutGateway {
 
-    let dataSession = EatOutNetworkGeoJSONDataSession()
+    let dataSession = EatOutGeoJSONDataSession()
     var completion: FetchLocationsCompletion? = nil
 
-    func fetchLocations(completion: @escaping FetchLocationsCompletion) {
+    func fetchLocations(type: EatOutFetchType, completion: @escaping FetchLocationsCompletion) {
         self.completion = completion
-        dataSession.fetchData(completion: fetchHandler)
+        let ignoreNonModified = ( type == .Default ) ? false : true
+        dataSession.fetchData(ignoreNonModified: ignoreNonModified, completion: fetchHandler)
     }
 
     private func fetchHandler(features: [GeoJSONFeature]?, error: Error?) -> Void {
 
+        defer {
+            completion = nil
+        }
+
         guard let features = features else {
-            completion?(nil, error ?? EatOutFinderDataError.FetchUnexpectedError )
+            completion?(nil, error ?? EatOutFinderDataError.FetchUnexpectedError)
             return
         }
 
-        let entities = features.map { (f) -> EatOutLocationEntity in
+        let entities = self.entities(for: features)
+        completion?(entities, nil)
+    }
+
+
+    private func entities(for features: [GeoJSONFeature]) -> [EatOutLocationEntity] {
+        features.map { (f) -> EatOutLocationEntity in
             let coordinate = (f.geometry.lat, f.geometry.long)
             let name = f.properties.name
             let postcode = f.properties.postcode
             return EatOutLocationEntity(coordinate: coordinate, name: name, postcode: postcode)
         }
-
-        completion?(entities, nil)
-        completion = nil
     }
 
 }
 
 // MARK: - GeoJSON Data Session
 
-class EatOutNetworkGeoJSONDataSession {
+class EatOutGeoJSONDataSession {
 
     fileprivate typealias FetchDataCompletion = (_ : [GeoJSONFeature]?, _ : Error?) -> Swift.Void
 
@@ -47,10 +55,12 @@ class EatOutNetworkGeoJSONDataSession {
     private var session: URLSession?
     private var fetchCompletion: FetchDataCompletion?
     private var dataTask: URLSessionDownloadTask?
+    private var ignoresNonModified: Bool = false
 
     // MARK: API
 
-    fileprivate func fetchData(completion: @escaping FetchDataCompletion )  {
+    fileprivate func fetchData(ignoreNonModified: Bool = false, completion: @escaping FetchDataCompletion )  {
+        self.ignoresNonModified = ignoreNonModified
         self.fetchCompletion = completion
         fetchJSON()
     }
@@ -73,27 +83,27 @@ class EatOutNetworkGeoJSONDataSession {
         session = URLSession(configuration: configuration, delegate: downloadManager, delegateQueue: nil )
     }
 
-    private func decodeJSON(data: Data) -> Bool {
+    private func decodeJSON(data: Data) -> GeoJSONFeatureCollection? {
 
         //TODO: Swap in MKGeoJSONDecoder as a less code alternative
 
+        //THIS IS VERY SLOW
         let decoder = JSONDecoder()
 
         do {
             let collection = try decoder.decode(GeoJSONFeatureCollection.self, from: data)
-            complete(with: collection)
-            return true
+            return collection
         } catch {
             AppLogger.log(object: self, function: #function, error: error )
-            return false
+            return nil
         }
     }
 
     //MARK: Completion
 
-    private func complete(with collection: GeoJSONFeatureCollection) {
-        AppLogger.log(object: self, function: #function, message: "Did Decode GeoJSON Type:\(collection.type)")
-        complete(with: collection.features, error: nil)
+    private func complete(with collection: GeoJSONFeatureCollection?) {
+        AppLogger.log(object: self, function: #function, message: "Did Decode GeoJSON Type:\(String(describing: collection?.type))")
+        complete(with: collection?.features, error: nil)
     }
 
     private func complete(with error: Error) {
@@ -108,30 +118,28 @@ class EatOutNetworkGeoJSONDataSession {
 
 }
 
-extension EatOutNetworkGeoJSONDataSession: JSONFileDownloadManagerDelegate {
+extension EatOutGeoJSONDataSession: JSONFileDownloadManagerDelegate {
 
-    func downloadManager(_ manager: JSONFileDownloadManager, didDownload data: Data?, task: URLSessionTask, error: Error?) {
+    func downloadManager(_ manager: JSONFileDownloadManager, didDownload data: Data?, task: URLSessionTask, notModified: Bool?, error: Error?) {
 
         AppLogger.log(object: self, function: #function)
 
-        guard let data = data else {
+        defer { clearSession() }
 
+        let disableDecoding = ( notModified == true && ignoresNonModified )
+
+        guard let data = data,
+            let collection = (disableDecoding) ? nil : decodeJSON(data: data)
+        else {
             let error = error ?? EatOutFinderDataError.FetchUnexpectedError
-
             complete(with: error)
-
             return
         }
 
-        let success = decodeJSON(data: data)
+        complete(with: collection)
 
-        if success {
-            URLSessionConfiguration.modifyDownloadTaskCacheHeaders(for: task.response)
-        } else {
-            URLSessionConfiguration.resetDownloadTaskCacheHeaders()
-        }
+        URLSessionConfiguration.modifyDownloadTaskCacheHeaders(for: task.response)
 
-        clearSession()
     }
 
 }
