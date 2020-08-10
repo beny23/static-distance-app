@@ -18,6 +18,10 @@
 		8C18712224DADBE400CA919B /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C18712124DADBE400CA919B /* AppLogger.swift */; };
 		8C2A54D424E1858C000B7E82 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A54D324E1858C000B7E82 /* WebKit.framework */; };
 		8C2A54D624E1861C000B7E82 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C2A54D524E1861C000B7E82 /* CoreLocation.framework */; };
+		8C2A54D924E1C344000B7E82 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2A54D824E1C344000B7E82 /* AppCenterCrashes */; };
+		8C2A54DB24E1C344000B7E82 /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2A54DA24E1C344000B7E82 /* AppCenterAnalytics */; };
+		8C2A54DD24E1C39D000B7E82 /* AppOperabilityMonitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */; };
+		8C2A54DF24E1C40E000B7E82 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A54DE24E1C40E000B7E82 /* AppEnvironment.swift */; };
 		8CB60FDA24DC5AC300FC6F74 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */; };
 		8CB60FDC24DC8F7C00FC6F74 /* StoryboardUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */; };
 		8CB60FDE24DDACF200FC6F74 /* CoreLocationGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */; };
@@ -54,6 +58,8 @@
 		8C18712124DADBE400CA919B /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 		8C2A54D324E1858C000B7E82 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		8C2A54D524E1861C000B7E82 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOperabilityMonitoring.swift; sourceTree = "<group>"; };
+		8C2A54DE24E1C40E000B7E82 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardUI.swift; sourceTree = "<group>"; };
 		8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationGateway.swift; sourceTree = "<group>"; };
@@ -71,6 +77,8 @@
 				8C2A54D624E1861C000B7E82 /* CoreLocation.framework in Frameworks */,
 				8C2A54D424E1858C000B7E82 /* WebKit.framework in Frameworks */,
 				8CDF212824DB033A0031E6D2 /* GZIP in Frameworks */,
+				8C2A54DB24E1C344000B7E82 /* AppCenterAnalytics in Frameworks */,
+				8C2A54D924E1C344000B7E82 /* AppCenterCrashes in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +116,8 @@
 			children = (
 				8C1870F924DAB32100CA919B /* AppDelegate.swift */,
 				8C18711D24DAB50800CA919B /* AppContext.swift */,
+				8C2A54DE24E1C40E000B7E82 /* AppEnvironment.swift */,
+				8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */,
 				8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */,
 				8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */,
 				8C18711F24DACC4800CA919B /* EatOutFinder.swift */,
@@ -153,6 +163,7 @@
 			buildPhases = (
 				8C1870F224DAB32100CA919B /* Sources */,
 				8C1870F324DAB32100CA919B /* Frameworks */,
+				8C2A54E024E1C541000B7E82 /* ShellScript */,
 				8C1870F424DAB32100CA919B /* Resources */,
 			);
 			buildRules = (
@@ -162,6 +173,8 @@
 			name = EatOutToHelpOut;
 			packageProductDependencies = (
 				8CDF212724DB033A0031E6D2 /* GZIP */,
+				8C2A54D824E1C344000B7E82 /* AppCenterCrashes */,
+				8C2A54DA24E1C344000B7E82 /* AppCenterAnalytics */,
 			);
 			productName = EatOutToHelpOut;
 			productReference = 8C1870F624DAB32100CA919B /* Discount Finder.app */;
@@ -215,6 +228,7 @@
 			mainGroup = 8C1870ED24DAB32100CA919B;
 			packageReferences = (
 				8CDF212624DB033A0031E6D2 /* XCRemoteSwiftPackageReference "GZIP" */,
+				8C2A54D724E1C344000B7E82 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 			);
 			productRefGroup = 8C1870F724DAB32100CA919B /* Products */;
 			projectDirPath = "";
@@ -246,6 +260,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		8C2A54E024E1C541000B7E82 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${PROJECT_DIR}\"/\"${TARGET_NAME}\"/generate.sh\" --apikeys\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8C1870F224DAB32100CA919B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -258,9 +292,11 @@
 				8C18712024DACC4800CA919B /* EatOutFinder.swift in Sources */,
 				8C18712224DADBE400CA919B /* AppLogger.swift in Sources */,
 				8C18711E24DAB50800CA919B /* AppContext.swift in Sources */,
+				8C2A54DF24E1C40E000B7E82 /* AppEnvironment.swift in Sources */,
 				8C18711C24DAB35D00CA919B /* EatOutFinderUI.swift in Sources */,
 				8CDF212A24DBE9FC0031E6D2 /* ErrorUI.swift in Sources */,
 				8CB60FE024DE895E00FC6F74 /* EatOutGeoJsonGateway.swift in Sources */,
+				8C2A54DD24E1C39D000B7E82 /* AppOperabilityMonitoring.swift in Sources */,
 				8C1870FA24DAB32100CA919B /* AppDelegate.swift in Sources */,
 				8CF0DE9924DF0AA10046E738 /* DownloadTaskURLSessionConfiguration.swift in Sources */,
 			);
@@ -533,6 +569,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8C2A54D724E1C344000B7E82 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.3.2;
+			};
+		};
 		8CDF212624DB033A0031E6D2 /* XCRemoteSwiftPackageReference "GZIP" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nicklockwood/GZIP";
@@ -544,6 +588,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8C2A54D824E1C344000B7E82 /* AppCenterCrashes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C2A54D724E1C344000B7E82 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			productName = AppCenterCrashes;
+		};
+		8C2A54DA24E1C344000B7E82 /* AppCenterAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8C2A54D724E1C344000B7E82 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			productName = AppCenterAnalytics;
+		};
 		8CDF212724DB033A0031E6D2 /* GZIP */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8CDF212624DB033A0031E6D2 /* XCRemoteSwiftPackageReference "GZIP" */;
