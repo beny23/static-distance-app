@@ -216,7 +216,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
 }
 
 extension CLLocationDegrees {
-    static let ZoomThreshold = 0.15
+    static let ZoomThreshold = 0.05
 }
 
 extension CLLocationCoordinate2D {
