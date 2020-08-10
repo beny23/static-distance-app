@@ -100,7 +100,7 @@ extension EatOutMapViewController: EatOutFinderOutlet {
     func show(_ url: URL, title: String) {
         self.webViewURL = url
         self.searchTerm = title
-        performSegue(withIdentifier: SegueIdentifier.WebViewSegueIdentifier.rawValue, sender: self)
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func show(_ items : [EatOutFinderItemUI]) {
