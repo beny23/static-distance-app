@@ -13,9 +13,9 @@ private enum WebViewControllerError : Error {
 
 class WebViewController : UIViewController {
 
-    @IBOutlet weak var webView: WKWebView!
-    @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var activityIndicicator: UIActivityIndicatorView!
+    @IBOutlet var webView: WKWebView!
+    @IBOutlet var label: UILabel!
+    @IBOutlet var activityIndicicator: UIActivityIndicatorView!
 
     private var webSearchRedirectNavigationAction: WKNavigationAction?
     weak var dataSource: WebViewControllerDataSource?

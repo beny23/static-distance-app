@@ -5,9 +5,9 @@ class EatOutMapViewController: StoryboardSegueViewController {
 
     static let MapAnnotationReuseIdentifier = NSStringFromClass(EatOutFinderItemUI.self)
 
-    @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var enableUserTrackingButton: UIButton!
-    @IBOutlet weak var mapUserTrackingButtonContainer: UIView!
+    @IBOutlet var mapView: MKMapView!
+    @IBOutlet var enableUserTrackingButton: UIButton!
+    @IBOutlet var mapUserTrackingButtonContainer: UIView!
 
 
     var interactor: EatOutFinder!
