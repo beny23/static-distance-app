@@ -18,6 +18,8 @@ class WebViewController : UIViewController {
     @IBOutlet var activityIndicicator: UIActivityIndicatorView!
 
     private var webSearchRedirectNavigationAction: WKNavigationAction?
+    private var webSearchResultURL: URL?
+
     weak var dataSource: WebViewControllerDataSource?
 
     override func viewDidLoad() {
@@ -56,10 +58,27 @@ class WebViewController : UIViewController {
         return request.url?.host == dataSource?.webViewURL?.host
     }
 
+    private func requestMatchesResultPageURL(request: URLRequest) -> Bool {
+
+        guard let webSearchResultURL = webSearchResultURL else { return false }
+
+        let resultPagePathComponents = webSearchResultURL.pathComponents
+        let requestPathComponents = request.url?.pathComponents
+        let requestPathMatches = resultPagePathComponents == requestPathComponents
+
+        return requestPathMatches
+    }
+
     private func fallbackToSafari(error: NSError) {
+        let failingErrorURL = error.userInfo[NSURLErrorFailingURLErrorKey] as? URL
+        self.dismissAndOpenURL(failingErrorURL)
+    }
+
+    private func dismissAndOpenURL(_ url: URL?) {
+        AppLogger.log(object: self, function: #function)
         dismiss(animated: true) {
-            guard let failingErrorURL = error.userInfo[NSURLErrorFailingURLErrorKey] as? URL else { return }
-            UIApplication.shared.open(failingErrorURL, options: [:], completionHandler: nil)
+            guard let url = url else { return }
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
 }
@@ -83,6 +102,10 @@ extension WebViewController: WKNavigationDelegate {
         let allow = isSearchRedirectOrResult(navigationAction)
         decisionHandler(allow ? .allow : .cancel)
         handleDialOut(navigationAction)
+        AppLogger.log(object: self, function: #function, message: "POLICY : \(allow ? "ALLOW" : "CANCEL")")
+        if !allow {
+            dismissAndOpenURL(navigationAction.request.url)
+        }
     }
 
     private func handleDialOut(_ navigationAction: WKNavigationAction) {
@@ -93,10 +116,13 @@ extension WebViewController: WKNavigationDelegate {
     }
 
     private func isSearchRedirectOrResult(_ navigationAction: WKNavigationAction) -> Bool {
+        AppLogger.log(object: self, function: #function, message: "Check Navigation URL: \(navigationAction.request.url!)")
         let isSearchEngineRedirect = requestMatchesDataSourceURL(request: navigationAction.request)
         let isSearchResultPage = webSearchRedirectNavigationAction != nil && !isSearchEngineRedirect
+        let isMobileSubdomainRedirect = requestMatchesResultPageURL(request: navigationAction.request)
         if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
-        return ( isSearchEngineRedirect || isSearchResultPage )
+        if isSearchResultPage  { webSearchResultURL = navigationAction.request.url }
+        return ( isSearchEngineRedirect || isSearchResultPage || isMobileSubdomainRedirect )
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
