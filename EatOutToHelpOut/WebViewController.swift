@@ -56,6 +56,12 @@ class WebViewController : UIViewController {
         return request.url?.host == dataSource?.webViewURL?.host
     }
 
+    private func fallbackToSafari(error: NSError) {
+        dismiss(animated: true) {
+            guard let failingErrorURL = error.userInfo[NSURLErrorFailingURLErrorKey] as? URL else { return }
+            UIApplication.shared.open(failingErrorURL, options: [:], completionHandler: nil)
+        }
+    }
 }
 
 extension WebViewController: WKNavigationDelegate {
@@ -66,6 +72,7 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_: WKWebView, didFailProvisionalNavigation: WKNavigation!, withError error: Error) {
         AppLogger.log(object: self, function: #function, error: error)
+        fallbackToSafari(error: error as NSError)
     }
 
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
@@ -73,11 +80,9 @@ extension WebViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-
         let allow = isSearchRedirectOrResult(navigationAction)
         decisionHandler(allow ? .allow : .cancel)
         handleDialOut(navigationAction)
-
     }
 
     private func handleDialOut(_ navigationAction: WKNavigationAction) {
@@ -93,8 +98,6 @@ extension WebViewController: WKNavigationDelegate {
         if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
         return ( isSearchEngineRedirect || isSearchResultPage )
     }
-
-
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         AppLogger.log(object: self, function: #function, message: "WEBVIEW NAVIGATION: \(String(describing: navigationResponse.response.url?.host))")
