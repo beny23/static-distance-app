@@ -35,7 +35,7 @@ class WebViewController : UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        guard let _ = dataSource?.webViewURL else {  dismiss(animated: true, completion: nil); return }
+        guard let _ = dataSource?.webViewURL else {dismissAndOpenURL(nil); return }
     }
 
     private func configureWebView() {
@@ -61,7 +61,9 @@ class WebViewController : UIViewController {
     }
 
     private func requestMatchesDataSourceURL(request: URLRequest) -> Bool {
-        return request.url?.host == dataSource?.webViewURL?.host
+        let isSearchEngineHost = request.url?.host == dataSource?.webViewURL?.host
+        let hasQueryString = request.url?.query != nil
+        return isSearchEngineHost && hasQueryString
     }
 
     private func requestMatchesResultPageURL(request: URLRequest) -> Bool {
@@ -73,6 +75,10 @@ class WebViewController : UIViewController {
         let requestPathMatches = resultPagePathComponents == requestPathComponents
 
         return requestPathMatches
+    }
+
+    private func urlMatchesDuckDuckGoErrorPage(url: URL?) -> Bool {
+        return url?.pathComponents.last == "post2.html"
     }
 
     private func fallbackToSafari(error: NSError) {
@@ -97,8 +103,15 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_: WKWebView, didFailProvisionalNavigation: WKNavigation!, withError error: Error) {
         AppLogger.log(object: self, function: #function, error: error)
+
         if didAllowLastNavigationAction /* Network Error */ {
-            dismissAndOpenURL(nil)
+
+            switch (error as NSError).code {
+            case NSURLErrorAppTransportSecurityRequiresSecureConnection:
+                dismissAndOpenURL(webSearchResultURL)
+            default:
+                dismissAndOpenURL(nil)
+            }
         }
     }
 
@@ -125,10 +138,15 @@ extension WebViewController: WKNavigationDelegate {
         let isSearchEngineRedirect = requestMatchesDataSourceURL(request: navigationAction.request)
         let isSearchResultPage = webSearchRedirectNavigationAction != nil && !isSearchEngineRedirect
         let isMobileSubdomainRedirect = requestMatchesResultPageURL(request: navigationAction.request)
+        let isErrorResultPage = urlMatchesDuckDuckGoErrorPage(url: navigationAction.request.url)
         if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
-        if isSearchResultPage  { webSearchResultURL = navigationAction.request.url; label.text = "Loading \"\( webSearchResultURL?.host ?? "")\"" }
+        if isSearchResultPage || isErrorResultPage { webSearchResultURL = navigationAction.request.url; label.text = "Loading \"\( webSearchResultURL?.host ?? "")\"" }
 
-        return ( isSearchEngineRedirect || isSearchResultPage || isMobileSubdomainRedirect )
+        if isErrorResultPage {
+            return false
+        } else {
+            return ( isSearchEngineRedirect || isSearchResultPage || isMobileSubdomainRedirect )
+        }
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
@@ -138,7 +156,17 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         AppLogger.log(object: self, function: #function, message: "\(String(describing: navigation))")
-        if !isProcessingSearchEngineRedirect { showWebView() }
+        if !isProcessingSearchEngineRedirect {
+            displayAppropriateWebViewOrExit()
+        }
+    }
+
+    private func displayAppropriateWebViewOrExit() {
+        if urlMatchesDuckDuckGoErrorPage(url: webSearchResultURL) {
+            dismissAndOpenURL(dataSource?.webViewURL)
+        } else {
+            showWebView()
+        }
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
