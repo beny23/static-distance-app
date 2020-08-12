@@ -93,6 +93,7 @@ class EatOutGeoJSONDataSession {
 
         do {
             let collection = try decoder.decode(GeoJSONFeatureCollection.self, from: data)
+            AppLogger.log(object: self, function: #function)
             return collection
         } catch {
             AppLogger.log(object: self, function: #function, error: error )
