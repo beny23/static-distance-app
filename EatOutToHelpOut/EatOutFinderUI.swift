@@ -100,7 +100,7 @@ extension EatOutMapViewController: EatOutFinderOutlet {
     func show(_ url: URL, title: String) {
         self.webViewURL = url
         self.searchTerm = title
-        performSegue(withIdentifier: SegueIdentifier.WebViewSegueIdentifier.rawValue, sender: self)
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
     func show(_ items : [EatOutFinderItemUI]) {
@@ -221,6 +221,7 @@ extension CLLocationDegrees {
 
 extension CLLocationCoordinate2D {
     static let UK = CLLocationCoordinate2D(latitude: 54.093409, longitude: -2.89479)
+    static let HW = CLLocationCoordinate2D(latitude: 51.6267, longitude: -0.7435)
 }
 
 extension MKCoordinateSpan {
@@ -231,6 +232,7 @@ extension MKCoordinateSpan {
 
 extension MKCoordinateRegion {
     static let UK = MKCoordinateRegion(center: CLLocationCoordinate2D.UK, span: MKCoordinateSpan.HIGH)
+    static let HW = MKCoordinateRegion(center: CLLocationCoordinate2D.HW, span: MKCoordinateSpan.LOW)
 }
 
 extension CLLocationDistance {

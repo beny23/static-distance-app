@@ -32,7 +32,12 @@ class CoreLocationGateway: NSObject, UserLocationGateway {
     }
 
     func fetchUserLocationStatus(requestsAuthorisation: Bool, completion: @escaping FetchUserLocationStatusCompletion) {
-        
+
+//        if let status = self.status {
+//            AppLogger.log(object: self, function: #function, message: "Location Status \(status)")
+//            completion(status)
+//        }
+
         if (self.status == nil  || status == .undefined) && requestsAuthorisation {
             requestAuthorisation(completion: completion)
         } else if let status = self.status {
@@ -42,7 +47,6 @@ class CoreLocationGateway: NSObject, UserLocationGateway {
             AppLogger.log(object: self, function: #function, message: "Deferring update. Wainting for location manager status...")
             pendingLocationStatusCompletion = completion
         }
-
     }
 
     func requestAuthorisation(completion: @escaping FetchUserLocationStatusCompletion) {
