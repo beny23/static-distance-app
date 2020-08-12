@@ -50,7 +50,7 @@ class WebViewController : UIViewController {
     private func loadURL() {
         guard let url = dataSource?.webViewURL else { return }
         AppLogger.log(object: self, function: #function, message: "Load URL \(url)")
-        let request = URLRequest(url: url)
+        let request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 5)
         webView.load(request)
     }
 
@@ -126,7 +126,7 @@ extension WebViewController: WKNavigationDelegate {
         let isSearchResultPage = webSearchRedirectNavigationAction != nil && !isSearchEngineRedirect
         let isMobileSubdomainRedirect = requestMatchesResultPageURL(request: navigationAction.request)
         if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
-        if isSearchResultPage  { webSearchResultURL = navigationAction.request.url }
+        if isSearchResultPage  { webSearchResultURL = navigationAction.request.url; label.text = "Loading \"\( webSearchResultURL?.host ?? "")\"" }
 
         return ( isSearchEngineRedirect || isSearchResultPage || isMobileSubdomainRedirect )
     }
