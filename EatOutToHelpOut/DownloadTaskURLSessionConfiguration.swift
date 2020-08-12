@@ -28,7 +28,7 @@ extension URLSessionConfiguration {
 
     static var DownloadTaskCacheConfiguration: URLSessionConfiguration {
         let configuration = URLSessionConfiguration.default
-        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 5
         configureCacheHeaders(configuration)
         return configuration
     }

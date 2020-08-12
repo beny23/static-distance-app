@@ -60,6 +60,7 @@ class EatOutGeoJSONDataSession {
     // MARK: API
 
     fileprivate func fetchData(ignoreNonModified: Bool = false, completion: @escaping FetchDataCompletion )  {
+        AppLogger.log(object: self, function: #function)
         self.ignoresNonModified = ignoreNonModified
         self.fetchCompletion = completion
         fetchJSON()
@@ -68,6 +69,7 @@ class EatOutGeoJSONDataSession {
     // MARK: Internals
 
     private func fetchJSON() {
+        AppLogger.log(object: self, function: #function)
         createSession()
         dataTask = session?.downloadTask(with: dataURL)
         dataTask?.resume()
@@ -87,11 +89,11 @@ class EatOutGeoJSONDataSession {
 
         //TODO: Swap in MKGeoJSONDecoder as a less code alternative
 
-        //THIS IS VERY SLOW
         let decoder = JSONDecoder()
 
         do {
             let collection = try decoder.decode(GeoJSONFeatureCollection.self, from: data)
+            AppLogger.log(object: self, function: #function)
             return collection
         } catch {
             AppLogger.log(object: self, function: #function, error: error )

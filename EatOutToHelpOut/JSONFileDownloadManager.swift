@@ -27,6 +27,7 @@ class JSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionT
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         guard let error = error else { AppLogger.log(object: self, function: #function); return }
         AppLogger.log(object: self, function: #function, error: error)
+        attemptDataRecoveryForTask(task, error: error)
     }
 
     //MARK: URLSessionDownloadDelegate
@@ -42,7 +43,7 @@ class JSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionT
             switch status {
             case 304:
                 AppLogger.log(object: self, function: #function, message: "Status 304, Read Existing")
-                let data = try? readData(file: Self.DocumentsDirectoryDataFileURL)
+                let data = try? readCachedData()
                 self.delegate.downloadManager(self, didDownload: data, task: downloadTask, notModified: true, error: nil)
                 return
             default:
@@ -97,10 +98,23 @@ class JSONFileDownloadManager: NSObject, URLSessionDownloadDelegate, URLSessionT
         return gunzippedData
     }
 
+    private func readCachedData() throws -> Data {
+        return try readData(file: Self.DocumentsDirectoryDataFileURL)
+    }
+
     private static var DocumentsDirectoryDataFileURL: URL {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
         var documentsFileURL = URL(fileURLWithPath: documentsPath)
         documentsFileURL.appendPathComponent("data.json", isDirectory: false)
         return documentsFileURL
+    }
+
+    private func attemptDataRecoveryForTask(_ task: URLSessionTask, error: Error) {
+        AppLogger.log(object: self, function: #function, error: error)
+        if let data = try? readCachedData()  {
+            delegate.downloadManager(self, didDownload: data, task: task, notModified: true, error: nil)
+        } else {
+            delegate.downloadManager(self, didDownload: nil, task: task, notModified: false, error: error)
+        }
     }
 }

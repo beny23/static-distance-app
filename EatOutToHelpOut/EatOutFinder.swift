@@ -139,8 +139,6 @@ class EatOutFinder {
 
     private func handleFetchResponse(entities: [EatOutLocationEntity]?, error: Error?) {
 
-
-        
         var completion: ()->Void = {}
 
         defer {
