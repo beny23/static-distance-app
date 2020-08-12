@@ -29,6 +29,11 @@ class WebViewController : UIViewController {
         loadURL()
     }
 
+    @IBAction func openInSafari(_ sender: Any) {
+        let url = webSearchResultURL ?? dataSource?.webViewURL
+        dismissAndOpenURL(url)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         guard let _ = dataSource?.webViewURL else {  dismiss(animated: true, completion: nil); return }
     }
@@ -39,7 +44,7 @@ class WebViewController : UIViewController {
     }
 
     private func configureLabel() {
-        label.text = "Searching for \"\(dataSource?.searchTerm ?? "<<Error>>")\""
+        label.text = "Searching for \"\(dataSource?.searchTerm?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "<<Error>>")\""
     }
 
     private func loadURL() {

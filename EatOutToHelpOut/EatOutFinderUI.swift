@@ -36,6 +36,10 @@ class EatOutMapViewController: StoryboardSegueViewController {
         interactor.updateLocation()
     }
 
+    @IBAction func exitToMap(segue : UIStoryboardSegue) {
+        // Exit to here
+    }
+
     private func configureMap() {
         MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.UK)
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
@@ -51,6 +55,7 @@ class EatOutMapViewController: StoryboardSegueViewController {
         userTrackingButton?.removeFromSuperview()
         userTrackingButton = nil
     }
+
 
 }
 

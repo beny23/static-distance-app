@@ -98,7 +98,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-P7-WGe">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="710"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -112,7 +112,7 @@
                                         <rect key="frame" x="188.5" y="0.0" width="37" height="37"/>
                                         <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </activityIndicatorView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Searching web" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vw-Wk-Xbm">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Searching web" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.65000000000000002" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4vw-Wk-Xbm">
                                         <rect key="frame" x="20" y="47" width="374" height="20.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -124,20 +124,41 @@
                                     <constraint firstItem="4vw-Wk-Xbm" firstAttribute="leading" secondItem="Zax-6W-wHE" secondAttribute="leading" constant="20" id="fNS-CQ-9uE"/>
                                 </constraints>
                             </stackView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Etx-fG-Bkt">
+                                <rect key="frame" x="0.0" y="710" width="414" height="49"/>
+                                <items>
+                                    <barButtonItem title="Browser" image="safari" catalog="system" id="xww-Ln-Quy">
+                                        <connections>
+                                            <action selector="openInSafari:" destination="kGj-NC-eST" id="j0Q-QL-qHA"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Ym5-bF-qse"/>
+                                    <barButtonItem systemItem="done" id="6Es-T6-T2e">
+                                        <connections>
+                                            <segue destination="iGA-sU-T5Y" kind="unwind" unwindAction="exitToMapWithSegue:" id="RZ3-OR-Ha0"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="bbW-P7-WGe" secondAttribute="bottom" id="5L6-Eb-ffc"/>
                             <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="bbW-P7-WGe" secondAttribute="trailing" id="7Xb-cQ-0Ct"/>
+                            <constraint firstItem="CgD-6Z-Shc" firstAttribute="bottom" secondItem="Etx-fG-Bkt" secondAttribute="bottom" id="Rk0-Fy-3x9"/>
                             <constraint firstItem="Zax-6W-wHE" firstAttribute="centerX" secondItem="0ZZ-Ce-yPj" secondAttribute="centerX" id="ShR-5V-ufg"/>
                             <constraint firstItem="Zax-6W-wHE" firstAttribute="centerY" secondItem="0ZZ-Ce-yPj" secondAttribute="centerY" id="Tmm-7x-sfx"/>
                             <constraint firstItem="bbW-P7-WGe" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="XfD-xY-yAe"/>
                             <constraint firstItem="Zax-6W-wHE" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="bIv-Er-p5x"/>
                             <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="Zax-6W-wHE" secondAttribute="trailing" id="bcD-Rj-vfd"/>
+                            <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="Etx-fG-Bkt" secondAttribute="trailing" id="fpO-W8-zKo"/>
+                            <constraint firstItem="bbW-P7-WGe" firstAttribute="bottom" secondItem="Etx-fG-Bkt" secondAttribute="top" id="pO5-x8-dq1"/>
+                            <constraint firstItem="Etx-fG-Bkt" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="tf7-O7-BKw"/>
                             <constraint firstItem="bbW-P7-WGe" firstAttribute="top" secondItem="CgD-6Z-Shc" secondAttribute="top" id="wgx-RR-ng0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CgD-6Z-Shc"/>
                     </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicicator" destination="b6P-L1-WcS" id="a8O-gi-BxW"/>
                         <outlet property="label" destination="4vw-Wk-Xbm" id="hw0-SL-mGb"/>
@@ -145,6 +166,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vee-nZ-2Xh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="iGA-sU-T5Y" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1060.8695652173915" y="138.61607142857142"/>
         </scene>
@@ -154,5 +176,6 @@
         <image name="location" catalog="system" width="128" height="115"/>
         <image name="location.circle.fill" catalog="system" width="128" height="121"/>
         <image name="location.slash" catalog="system" width="128" height="115"/>
+        <image name="safari" catalog="system" width="128" height="121"/>
     </resources>
 </document>
