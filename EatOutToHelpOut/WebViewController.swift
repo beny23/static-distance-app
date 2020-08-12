@@ -19,6 +19,7 @@ class WebViewController : UIViewController {
 
     private var webSearchRedirectNavigationAction: WKNavigationAction?
     private var webSearchResultURL: URL?
+    private var didAllowLastNavigationAction: Bool = false
 
     weak var dataSource: WebViewControllerDataSource?
 
@@ -91,7 +92,9 @@ extension WebViewController: WKNavigationDelegate {
 
     func webView(_: WKWebView, didFailProvisionalNavigation: WKNavigation!, withError error: Error) {
         AppLogger.log(object: self, function: #function, error: error)
-        fallbackToSafari(error: error as NSError)
+        if didAllowLastNavigationAction /* Network Error */ {
+            dismissAndOpenURL(nil)
+        }
     }
 
     func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
@@ -99,13 +102,10 @@ extension WebViewController: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        let allow = isSearchRedirectOrResult(navigationAction)
-        decisionHandler(allow ? .allow : .cancel)
+        didAllowLastNavigationAction = isSearchRedirectOrResult(navigationAction)
+        AppLogger.log(object: self, function: #function, message: "POLICY : \(didAllowLastNavigationAction ? "ALLOW" : "CANCEL")")
+        decisionHandler(didAllowLastNavigationAction ? .allow : .cancel)
         handleDialOut(navigationAction)
-        AppLogger.log(object: self, function: #function, message: "POLICY : \(allow ? "ALLOW" : "CANCEL")")
-        if !allow {
-            dismissAndOpenURL(navigationAction.request.url)
-        }
     }
 
     private func handleDialOut(_ navigationAction: WKNavigationAction) {
@@ -122,6 +122,7 @@ extension WebViewController: WKNavigationDelegate {
         let isMobileSubdomainRedirect = requestMatchesResultPageURL(request: navigationAction.request)
         if isSearchEngineRedirect { webSearchRedirectNavigationAction = navigationAction } else { webSearchRedirectNavigationAction = nil }
         if isSearchResultPage  { webSearchResultURL = navigationAction.request.url }
+
         return ( isSearchEngineRedirect || isSearchResultPage || isMobileSubdomainRedirect )
     }
 
