@@ -96,53 +96,9 @@
                     <view key="view" contentMode="scaleToFill" id="0ZZ-Ce-yPj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-P7-WGe">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Zax-6W-wHE">
-                                <rect key="frame" x="0.0" y="387.5" width="414" height="67.5"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="b6P-L1-WcS">
-                                        <rect key="frame" x="188.5" y="0.0" width="37" height="37"/>
-                                        <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </activityIndicatorView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Searching web" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vw-Wk-Xbm">
-                                        <rect key="frame" x="20" y="47" width="374" height="20.5"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="4vw-Wk-Xbm" secondAttribute="trailing" constant="20" id="4uv-Dm-9T7"/>
-                                    <constraint firstItem="4vw-Wk-Xbm" firstAttribute="leading" secondItem="Zax-6W-wHE" secondAttribute="leading" constant="20" id="fNS-CQ-9uE"/>
-                                </constraints>
-                            </stackView>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="bbW-P7-WGe" secondAttribute="bottom" id="5L6-Eb-ffc"/>
-                            <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="bbW-P7-WGe" secondAttribute="trailing" id="7Xb-cQ-0Ct"/>
-                            <constraint firstItem="Zax-6W-wHE" firstAttribute="centerX" secondItem="0ZZ-Ce-yPj" secondAttribute="centerX" id="ShR-5V-ufg"/>
-                            <constraint firstItem="Zax-6W-wHE" firstAttribute="centerY" secondItem="0ZZ-Ce-yPj" secondAttribute="centerY" id="Tmm-7x-sfx"/>
-                            <constraint firstItem="bbW-P7-WGe" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="XfD-xY-yAe"/>
-                            <constraint firstItem="Zax-6W-wHE" firstAttribute="leading" secondItem="CgD-6Z-Shc" secondAttribute="leading" id="bIv-Er-p5x"/>
-                            <constraint firstItem="CgD-6Z-Shc" firstAttribute="trailing" secondItem="Zax-6W-wHE" secondAttribute="trailing" id="bcD-Rj-vfd"/>
-                            <constraint firstItem="bbW-P7-WGe" firstAttribute="top" secondItem="CgD-6Z-Shc" secondAttribute="top" id="wgx-RR-ng0"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="CgD-6Z-Shc"/>
                     </view>
-                    <connections>
-                        <outlet property="activityIndicicator" destination="b6P-L1-WcS" id="a8O-gi-BxW"/>
-                        <outlet property="label" destination="4vw-Wk-Xbm" id="hw0-SL-mGb"/>
-                        <outlet property="webView" destination="bbW-P7-WGe" id="PdR-2z-56G"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vee-nZ-2Xh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

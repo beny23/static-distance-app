@@ -21,9 +21,9 @@ class WebViewController : UIViewController {
     weak var dataSource: WebViewControllerDataSource?
 
     override func viewDidLoad() {
-        configureWebView()
-        configureLabel()
-        loadURL()
+//        configureWebView()
+//        configureLabel()
+//        loadURL()
     }
 
     override func viewDidAppear(_ animated: Bool) {
