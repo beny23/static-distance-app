@@ -39,7 +39,7 @@ class CoreLocationGateway: NSObject, UserLocationGateway {
             AppLogger.log(object: self, function: #function, message: "Skipped Authorisation Check")
             completion(status )
         } else {
-            AppLogger.log(object: self, function: #function, message: "Deferring update. Wainting for location manager status...")
+            AppLogger.log(object: self, function: #function, message: "Deferring update. Waiting for location manager status...")
             pendingLocationStatusCompletion = completion
         }
 

@@ -139,8 +139,13 @@ class EatOutFinder {
 
         defer {
             dispatchMain {
-                self.updateLocation(requestAuthorisation: false)
                 completion()
+            }
+        }
+
+        if (!didLoad) {
+            dispatchMain {
+                self.updateLocation(requestAuthorisation: false)
             }
         }
 
