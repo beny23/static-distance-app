@@ -22,6 +22,8 @@
 		8C2A54DB24E1C344000B7E82 /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8C2A54DA24E1C344000B7E82 /* AppCenterAnalytics */; };
 		8C2A54DD24E1C39D000B7E82 /* AppOperabilityMonitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */; };
 		8C2A54DF24E1C40E000B7E82 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2A54DE24E1C40E000B7E82 /* AppEnvironment.swift */; };
+		8C64532D24E512EA00FE0348 /* DuckDuckGoSearchRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C64532C24E512EA00FE0348 /* DuckDuckGoSearchRequestController.swift */; };
+		8C64532F24E51ACB00FE0348 /* DuckDuckGoWebViewDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C64532A24E5125E00FE0348 /* DuckDuckGoWebViewDelegateTests.swift */; };
 		8CB60FDA24DC5AC300FC6F74 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */; };
 		8CB60FDC24DC8F7C00FC6F74 /* StoryboardUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */; };
 		8CB60FDE24DDACF200FC6F74 /* CoreLocationGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */; };
@@ -43,7 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8C1870F624DAB32100CA919B /* Discount Finder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Discount Finder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C1870F624DAB32100CA919B /* EatOutToHelpOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EatOutToHelpOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C1870F924DAB32100CA919B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C18710024DAB32100CA919B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8C18710224DAB32500CA919B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -60,6 +62,8 @@
 		8C2A54D524E1861C000B7E82 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppOperabilityMonitoring.swift; sourceTree = "<group>"; };
 		8C2A54DE24E1C40E000B7E82 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		8C64532A24E5125E00FE0348 /* DuckDuckGoWebViewDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckDuckGoWebViewDelegateTests.swift; sourceTree = "<group>"; };
+		8C64532C24E512EA00FE0348 /* DuckDuckGoSearchRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckDuckGoSearchRequestController.swift; sourceTree = "<group>"; };
 		8CB60FD924DC5AC300FC6F74 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardUI.swift; sourceTree = "<group>"; };
 		8CB60FDD24DDACF200FC6F74 /* CoreLocationGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocationGateway.swift; sourceTree = "<group>"; };
@@ -105,7 +109,7 @@
 		8C1870F724DAB32100CA919B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8C1870F624DAB32100CA919B /* Discount Finder.app */,
+				8C1870F624DAB32100CA919B /* EatOutToHelpOut.app */,
 				8C18710C24DAB32500CA919B /* EatOutToHelpOutTests.xctest */,
 			);
 			name = Products;
@@ -132,6 +136,7 @@
 				8C18710724DAB32500CA919B /* Info.plist */,
 				8C18712124DADBE400CA919B /* AppLogger.swift */,
 				8CDF212924DBE9FC0031E6D2 /* ErrorUI.swift */,
+				8C64532C24E512EA00FE0348 /* DuckDuckGoSearchRequestController.swift */,
 			);
 			path = EatOutToHelpOut;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 		8C18710F24DAB32500CA919B /* EatOutToHelpOutTests */ = {
 			isa = PBXGroup;
 			children = (
+				8C64532A24E5125E00FE0348 /* DuckDuckGoWebViewDelegateTests.swift */,
 				8C18711024DAB32500CA919B /* EatOutToHelpOutTests.swift */,
 				8C18711224DAB32500CA919B /* Info.plist */,
 			);
@@ -177,7 +183,7 @@
 				8C2A54DA24E1C344000B7E82 /* AppCenterAnalytics */,
 			);
 			productName = EatOutToHelpOut;
-			productReference = 8C1870F624DAB32100CA919B /* Discount Finder.app */;
+			productReference = 8C1870F624DAB32100CA919B /* EatOutToHelpOut.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8C18710B24DAB32500CA919B /* EatOutToHelpOutTests */ = {
@@ -294,6 +300,7 @@
 				8C18711E24DAB50800CA919B /* AppContext.swift in Sources */,
 				8C2A54DF24E1C40E000B7E82 /* AppEnvironment.swift in Sources */,
 				8C18711C24DAB35D00CA919B /* EatOutFinderUI.swift in Sources */,
+				8C64532D24E512EA00FE0348 /* DuckDuckGoSearchRequestController.swift in Sources */,
 				8CDF212A24DBE9FC0031E6D2 /* ErrorUI.swift in Sources */,
 				8CB60FE024DE895E00FC6F74 /* EatOutGeoJsonGateway.swift in Sources */,
 				8C2A54DD24E1C39D000B7E82 /* AppOperabilityMonitoring.swift in Sources */,
@@ -306,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C64532F24E51ACB00FE0348 /* DuckDuckGoWebViewDelegateTests.swift in Sources */,
 				8C18711124DAB32500CA919B /* EatOutToHelpOutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -467,7 +475,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.equalexperts.client.softwaredesignsystems.eatout;
-				PRODUCT_NAME = "Discount Finder";
+				PRODUCT_NAME = EatOutToHelpOut;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -486,7 +494,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.equalexperts.client.softwaredesignsystems.eatout;
-				PRODUCT_NAME = "Discount Finder";
+				PRODUCT_NAME = EatOutToHelpOut;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

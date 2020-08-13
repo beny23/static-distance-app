@@ -1,11 +1,3 @@
-//
-//  EatOutToHelpOutTests.swift
-//  EatOutToHelpOutTests
-//
-//  Created by paulstringer on 05/08/2020.
-//  Copyright © 2020 Equal Experts. All rights reserved.
-//
-
 import XCTest
 @testable import EatOutToHelpOut
 
