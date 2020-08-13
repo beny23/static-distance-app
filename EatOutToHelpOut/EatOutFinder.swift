@@ -1,22 +1,18 @@
 import Foundation
 import MapKit
 
-
-enum EatOutFinderDownloadStateUI {
-    case loading, finished
-}
-
-enum UserTrackingEnableButtonUI {
-    case enabled, disabled, hidden
+enum EatOutFinderStatusUI {
+    case loading // Loading data
+    case userLocationOff // Undetermined location permission
+    case userLocationOn // Location permission enabled
+    case userLocationDisabled // Location permission denied
 }
 
 protocol EatOutFinderOutlet: AnyObject {
     func show(_ : ErrorUI)
     func show(_ : [EatOutFinderItemUI])
     func show(_ : URL, title: String)
-    func show(_ : EatOutFinderDownloadStateUI)
-    func show(_ : UserTrackingEnableButtonUI)
-    func showSystemMapUserTracking()
+    func show(_ : EatOutFinderStatusUI)
 }
 
 enum EatOutFinderDataError: Error {
@@ -80,12 +76,11 @@ class EatOutFinder {
 
     weak var outlet: EatOutFinderOutlet?
 
-    let gateway: EatOutGateway
-    let locationGateway: UserLocationGateway
-    var didLoad: Bool = false
+    private let gateway: EatOutGateway
+    private let locationGateway: UserLocationGateway
+    private var didLoad: Bool = false
 
     init(gateway: EatOutGateway, locationGateway: UserLocationGateway) {
-
         self.gateway = gateway
         self.locationGateway = locationGateway
     }
@@ -98,13 +93,15 @@ class EatOutFinder {
     }
 
     func loadData() {
-        if !didLoad { outlet?.show(EatOutFinderDownloadStateUI.loading) }
         let fetchType: EatOutFetchType = didLoad ? .OnlyIfModified : .Default
+        if fetchType == .Default /* load quitely if we already have loaded */ { outlet?.show( EatOutFinderStatusUI.loading ) }
         gateway.fetchLocations(type: fetchType, completion: handleFetchResponse)
     }
 
     func updateUI() {
-        updateLocation(requestAuthorisation: false)
+        if didLoad {
+            updateLocation(requestAuthorisation: false)
+        }
     }
 
     func didSelectItem(item: EatOutFinderItemUI) {
@@ -121,14 +118,17 @@ class EatOutFinder {
             switch status {
             case .on:
                 AppLogger.log(object: self, function: #function, message: "Location Status: On")
-                self.outlet?.show(UserTrackingEnableButtonUI.hidden)
-                self.outlet?.showSystemMapUserTracking()
+//                self.outlet?.show(UserTrackingEnableButtonUI.hidden)
+//                self.outlet?.showSystemMapUserTracking()
+                self.outlet?.show(EatOutFinderStatusUI.userLocationOn)
             case .off:
                 AppLogger.log(object: self, function: #function, message: "Location Status: Off")
-                self.outlet?.show(UserTrackingEnableButtonUI.disabled)
+//                self.outlet?.show(UserTrackingEnableButtonUI.disabled)
+                self.outlet?.show(EatOutFinderStatusUI.userLocationDisabled)
             case .undefined:
                 AppLogger.log(object: self, function: #function, message: "Location Status: Undefined")
-                self.outlet?.show(UserTrackingEnableButtonUI.enabled)
+//                self.outlet?.show(UserTrackingEnableButtonUI.enabled)
+                self.outlet?.show(EatOutFinderStatusUI.userLocationOff)
             case .initialising:
                 break
             }
@@ -142,16 +142,22 @@ class EatOutFinder {
         var completion: ()->Void = {}
 
         defer {
-            dispatchMain { completion() }
+            dispatchMain {
+                self.updateLocation(requestAuthorisation: false)
+                completion()
+            }
         }
 
         guard let entities = entities else {
 
-            // Response is nil unless modified, only error if we did not load
+            // Response is nil when not-modified. Only error if we previousl did not load
+
             if !didLoad  {
                 let error = (error ?? EatOutFinderDataError.FetchUnexpectedError)
                 let errorUI = ErrorUI(error: error) { _ in self.load() }
-                completion = { self.outlet?.show(errorUI) }
+                completion = {
+                    self.outlet?.show(errorUI)
+                }
             } else {
                 AppLogger.log(object: self, function: #function, message: "Response unmodified")
             }
@@ -160,8 +166,8 @@ class EatOutFinder {
 
         }
 
-        let items = entities.map { EatOutFinderItemUI(entity: $0) }
         didLoad = true
+        let items = entities.map { EatOutFinderItemUI(entity: $0) }
         completion = { self.outlet?.show( items ) }
 
     }
