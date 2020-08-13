@@ -8,7 +8,7 @@ class EatOutMapViewController: StoryboardSegueViewController {
     @IBOutlet var mapView: MKMapView!
     @IBOutlet var enableUserTrackingButton: UIButton!
     @IBOutlet var mapUserTrackingButtonContainer: UIView!
-
+    @IBOutlet var loadingIndicator: UIActivityIndicatorView!
 
     var interactor: EatOutFinder!
     var items: [EatOutFinderItemUI] = [EatOutFinderItemUI]()
@@ -40,9 +40,44 @@ class EatOutMapViewController: StoryboardSegueViewController {
         // Exit to here
     }
 
+    // MARK: UI Configuration
+
     private func configureMap() {
         MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.UK)
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
+    }
+
+    private func configureEnableUserTrackingButton(isEnabled: Bool) {
+        enableUserTrackingButton.isHidden = false
+        enableUserTrackingButton.isEnabled = isEnabled
+        enableUserTrackingButton.tintColor = (isEnabled) ? .systemBlue : .systemGray
+        removeSystemMapUserTrackingButton()
+    }
+
+    private var isLoadingActive: Bool  {
+        return loadingIndicator.isAnimating
+    }
+
+    private func zoomToUserLocation() {
+        if let userLocationCoords = mapView.userLocation.location?.coordinate {
+            let userMapPoint = MKMapPoint(userLocationCoords)
+            let userLocationWithinBounds = mapView.cameraBoundary?.mapRect.contains(userMapPoint) ?? true
+            if  userLocationWithinBounds {
+                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.LOW )
+                mapView.setRegion(region, animated: true)
+            }
+        }
+    }
+
+    private func showLoadingActivityUI(hidden: Bool = false) {
+        if ( hidden ) { loadingIndicator.stopAnimating() } else { loadingIndicator.startAnimating() }
+    }
+
+    private func showSystemMapUserTracking() {
+        enableUserTrackingButton.isHidden = true
+        guard userTrackingButton == nil else { return }
+        shouldZoomOnUpdate = true
+        addSystemMapUserTrackingButton()
     }
 
     private func addSystemMapUserTrackingButton() {
@@ -57,6 +92,7 @@ class EatOutMapViewController: StoryboardSegueViewController {
     }
 
 
+
 }
 
 extension EatOutMapViewController: WebViewControllerDataSource {
@@ -64,43 +100,20 @@ extension EatOutMapViewController: WebViewControllerDataSource {
 
 extension EatOutMapViewController: EatOutFinderOutlet {
 
-
-    func show(_ locationButtonUI : UserTrackingEnableButtonUI) {
-
-        switch locationButtonUI {
-        case .disabled:
-            configureEnableUserTrackingButton(isEnabled:false)
-        case .enabled:
+    func show(_ status: EatOutFinderStatusUI) {
+        switch status {
+        case .loading:
+            showLoadingActivityUI()
+        case .userLocationOff:
             configureEnableUserTrackingButton(isEnabled:true)
-        case .hidden:
-            enableUserTrackingButton.isHidden = true
+        case .userLocationOn:
+            showSystemMapUserTracking()
+        case .userLocationDisabled:
+            configureEnableUserTrackingButton(isEnabled:false)
         }
-    }
 
-    func configureEnableUserTrackingButton(isEnabled: Bool) {
-        enableUserTrackingButton.isHidden = false
-        enableUserTrackingButton.isEnabled = isEnabled
-        enableUserTrackingButton.tintColor = (isEnabled) ? .systemBlue : .systemGray
-        removeSystemMapUserTrackingButton()
+        if status != .loading { showLoadingActivityUI(hidden: true) }
     }
-
-    func showSystemMapUserTracking() {
-        guard userTrackingButton == nil else { return }
-        shouldZoomOnUpdate = true
-        addSystemMapUserTrackingButton()
-    }
-
-    func zoomToUserLocation() {
-        if let userLocationCoords = mapView.userLocation.location?.coordinate {
-            let userMapPoint = MKMapPoint(userLocationCoords)
-            let userLocationWithinBounds = mapView.cameraBoundary?.mapRect.contains(userMapPoint) ?? true
-            if  userLocationWithinBounds {
-                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.LOW )
-                mapView.setRegion(region, animated: true)
-            }
-        }
-    }
-
 
     func show(_ url: URL, title: String) {
         self.webViewURL = url
@@ -121,16 +134,14 @@ extension EatOutMapViewController: EatOutFinderOutlet {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-
-    func show(_: EatOutFinderDownloadStateUI) {
-        //MARK: TODO Handle loading start stop states
-    }
-
 }
 
 extension EatOutFinderItemUI: MKAnnotation {
     var title: String? { return name }
 }
+
+
+//MARK:- MapViewDelegate
 
 extension EatOutMapViewController: MKMapViewDelegate {
 
@@ -152,7 +163,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
     }
 
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        if mapView.region.span.latitudeDelta < CLLocationDegrees.ZoomThreshold {
+        if mapView.region.span.latitudeDelta <= CLLocationDegrees.ZoomThreshold {
             showAnnotations(rect: mapView.visibleMapRect)
         } else  {
             mapView.removeAnnotations(mapView.annotations)
@@ -171,7 +182,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, didFailToLocateUserWithError error: Error) {
         AppLogger.log(object: self, function: #function, error: error)
-        show(.disabled)
+        show(EatOutFinderStatusUI.userLocationDisabled)
         removeSystemMapUserTrackingButton()
     }
 
@@ -213,15 +224,13 @@ extension EatOutMapViewController: MKMapViewDelegate {
 
         }
 
-        missingAnnotations.forEach { (item) in
-            AppLogger.log(object: self, function: #function, message: "Adding Item \(item.name) Coord:\(item.coordinate)")
-        }
         mapView.addAnnotations(missingAnnotations)
-
 
     }
 
 }
+
+//MARK: - MapView Extensions
 
 extension CLLocationDegrees {
     static let ZoomThreshold = 0.05
@@ -234,7 +243,7 @@ extension CLLocationCoordinate2D {
 extension MKCoordinateSpan {
     static let HIGH = MKCoordinateSpan(latitudeDelta: 14.83, longitudeDelta: 12.22)
     static let MIDDLE = MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025)
-    static let LOW = MKCoordinateSpan(latitudeDelta: CLLocationDegrees.ZoomThreshold, longitudeDelta: CLLocationDegrees.ZoomThreshold)
+    static let LOW = MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025)
 }
 
 extension MKCoordinateRegion {
