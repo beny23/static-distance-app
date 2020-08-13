@@ -213,6 +213,9 @@ extension EatOutMapViewController: MKMapViewDelegate {
 
         }
 
+        missingAnnotations.forEach { (item) in
+            AppLogger.log(object: self, function: #function, message: "Adding Item \(item.name) Coord:\(item.coordinate)")
+        }
         mapView.addAnnotations(missingAnnotations)
 
 
