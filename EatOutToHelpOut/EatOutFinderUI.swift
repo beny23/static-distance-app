@@ -95,7 +95,7 @@ extension EatOutMapViewController: EatOutFinderOutlet {
             let userMapPoint = MKMapPoint(userLocationCoords)
             let userLocationWithinBounds = mapView.cameraBoundary?.mapRect.contains(userMapPoint) ?? true
             if  userLocationWithinBounds {
-                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.MIDDLE )
+                let region = MKCoordinateRegion(center: userLocationCoords, span: MKCoordinateSpan.LOW )
                 mapView.setRegion(region, animated: true)
             }
         }
@@ -234,7 +234,7 @@ extension CLLocationCoordinate2D {
 extension MKCoordinateSpan {
     static let HIGH = MKCoordinateSpan(latitudeDelta: 14.83, longitudeDelta: 12.22)
     static let MIDDLE = MKCoordinateSpan(latitudeDelta: 0.025, longitudeDelta: 0.025)
-    static let LOW = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+    static let LOW = MKCoordinateSpan(latitudeDelta: CLLocationDegrees.ZoomThreshold, longitudeDelta: CLLocationDegrees.ZoomThreshold)
 }
 
 extension MKCoordinateRegion {
