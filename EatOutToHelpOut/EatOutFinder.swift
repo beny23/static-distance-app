@@ -118,16 +118,12 @@ class EatOutFinder {
             switch status {
             case .on:
                 AppLogger.log(object: self, function: #function, message: "Location Status: On")
-//                self.outlet?.show(UserTrackingEnableButtonUI.hidden)
-//                self.outlet?.showSystemMapUserTracking()
                 self.outlet?.show(EatOutFinderStatusUI.userLocationOn)
             case .off:
                 AppLogger.log(object: self, function: #function, message: "Location Status: Off")
-//                self.outlet?.show(UserTrackingEnableButtonUI.disabled)
                 self.outlet?.show(EatOutFinderStatusUI.userLocationDisabled)
             case .undefined:
                 AppLogger.log(object: self, function: #function, message: "Location Status: Undefined")
-//                self.outlet?.show(UserTrackingEnableButtonUI.enabled)
                 self.outlet?.show(EatOutFinderStatusUI.userLocationOff)
             case .initialising:
                 break
