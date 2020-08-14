@@ -44,6 +44,7 @@ class EatOutMapViewController: StoryboardSegueViewController {
 
     private func configureMap() {
         MapViewConfiguration.configure(mapView, center: MKCoordinateRegion.UK)
+        mapView.register(EatOutClusterView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         mapView.register(MKMarkerAnnotationView.self, forAnnotationViewWithReuseIdentifier: Self.MapAnnotationReuseIdentifier)
     }
 
@@ -203,6 +204,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
         markerAnnotationView.canShowCallout = true
         markerAnnotationView.animatesWhenAdded = true
         markerAnnotationView.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        markerAnnotationView.clusteringIdentifier = String(describing: EatOutClusterView.self)
     }
 
     private func showAnnotations(rect: MKMapRect) {
@@ -233,7 +235,7 @@ extension EatOutMapViewController: MKMapViewDelegate {
 //MARK: - MapView Extensions
 
 extension CLLocationDegrees {
-    static let ZoomThreshold = 0.05
+    static let ZoomThreshold = 1.0
 }
 
 extension CLLocationCoordinate2D {
