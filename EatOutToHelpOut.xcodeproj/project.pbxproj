@@ -169,7 +169,7 @@
 			buildPhases = (
 				8C1870F224DAB32100CA919B /* Sources */,
 				8C1870F324DAB32100CA919B /* Frameworks */,
-				8C2A54E024E1C541000B7E82 /* ShellScript */,
+				8C2A54E024E1C541000B7E82 /* [EE] Genereate APIKeys.plist */,
 				8C1870F424DAB32100CA919B /* Resources */,
 			);
 			buildRules = (
@@ -267,7 +267,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8C2A54E024E1C541000B7E82 /* ShellScript */ = {
+		8C2A54E024E1C541000B7E82 /* [EE] Genereate APIKeys.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -276,13 +276,14 @@
 			);
 			inputPaths = (
 			);
+			name = "[EE] Genereate APIKeys.plist";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${PROJECT_DIR}\"/\"${TARGET_NAME}\"/generate.sh\" --apikeys\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\necho \"[EE] Generate API Keys\"\n${PROJECT_DIR}\"/\"${TARGET_NAME}\"/generate.sh\" --apikeys\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
