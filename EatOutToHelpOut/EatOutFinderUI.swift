@@ -9,7 +9,8 @@ class EatOutMapViewController: StoryboardSegueViewController {
     @IBOutlet var enableUserTrackingButton: UIButton!
     @IBOutlet var mapUserTrackingButtonContainer: UIView!
     @IBOutlet var loadingIndicator: UIActivityIndicatorView!
-    @IBOutlet var zoomNearerLabel: UIView!
+    @IBOutlet var zoomNearerLabel: UIView! { didSet {zoomNearerLabel.alpha = 0.0}}
+    @IBOutlet var zoomNearerBkgd: UIView! { didSet {zoomNearerBkgd.alpha = 0.0} }
     
 
     var interactor: EatOutFinder!
@@ -24,7 +25,6 @@ class EatOutMapViewController: StoryboardSegueViewController {
     var searchTerm: String?
 
     override func viewDidLoad() {
-        zoomNearerLabel.alpha = 0.0
         configureMap()
         interactor.load()
     }
@@ -119,7 +119,10 @@ extension EatOutMapViewController: EatOutFinderOutlet {
             configureEnableUserTrackingButton(isEnabled:false)
         }
 
-        if status != .loading { showLoadingActivityUI(hidden: true) }
+        if status != .loading {
+            mapView.delegate = self
+            showLoadingActivityUI(hidden: true)
+        }
     }
 
     func show(_ url: URL, title: String) {
@@ -169,39 +172,39 @@ extension EatOutMapViewController: MKMapViewDelegate {
         return view
     }
 
-
-
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        AppLogger.log(object: self, function: #function, message: "\(mapView.region.span.latitudeDelta.round(to: 2))")
         let newLatitudeDelta = mapView.region.span.latitudeDelta.round(to: 2)
         let didZoomIn = newLatitudeDelta < lastLatitudeDelta
         if mapView.region.span.latitudeDelta <= CLLocationDegrees.ZoomThreshold {
             showAnnotations(rect: mapView.visibleMapRect)
         } else  {
             mapView.removeAnnotations(mapView.annotations)
-            if ( didZoomIn ) { showZoomHint() }
+            if ( didZoomIn && !animated ) { showZoomHint() }
         }
         lastLatitudeDelta = newLatitudeDelta
     }
 
     private func showZoomHint() {
 
-
         guard self.zoomNearerLabel.alpha == CGFloat.zero else {
             return
         }
 
-        AppLogger.logMark()
-        
         let animationDuration = 1.0
-        let animateIn = UIViewPropertyAnimator(duration: animationDuration / 2, curve: .linear) {
+        let animationStageDuration = animationDuration / 2
+        let animateIn = UIViewPropertyAnimator(duration: animationStageDuration, curve: .easeOut) {
+            self.zoomNearerBkgd.alpha = 1.0
             self.zoomNearerLabel.alpha = 1.0
         }
-        let animateOut = UIViewPropertyAnimator(duration: animationDuration / 2, curve: .linear) {
-           self.zoomNearerLabel.alpha = CGFloat.zero
+        let animateOut = UIViewPropertyAnimator(duration: animationStageDuration, curve: .easeIn) {
+            self.zoomNearerBkgd.alpha = CGFloat.zero
+            self.zoomNearerLabel.alpha = CGFloat.zero
         }
         animateIn.addCompletion { (pos) in
             animateOut.startAnimation(afterDelay: 0.5)
         }
+
         animateIn.startAnimation()
 
     }
@@ -287,7 +290,7 @@ extension MKCoordinateRegion {
 }
 
 extension CLLocationDistance {
-    static let UKZoomMin = CLLocationDistance(exactly: 0.5 * 1000)!
+    static let UKZoomMin = CLLocationDistance(exactly: 0.25 * 1000)!
     static let UKZoomMax = CLLocationDistance(exactly: 2200 * 1000)!
 }
 
