@@ -126,6 +126,7 @@
 				8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */,
 				8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */,
 				8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */,
+				42EE680E24E60D6E006D2E64 /* EatOutClusterView.swift */,
 				8C18711F24DACC4800CA919B /* EatOutFinder.swift */,
 				8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */,
 				8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */,
@@ -139,7 +140,6 @@
 				8C18712124DADBE400CA919B /* AppLogger.swift */,
 				8CDF212924DBE9FC0031E6D2 /* ErrorUI.swift */,
 				8C64532C24E512EA00FE0348 /* DuckDuckGoSearchRequestController.swift */,
-				42EE680E24E60D6E006D2E64 /* EatOutClusterView.swift */,
 			);
 			path = EatOutToHelpOut;
 			sourceTree = "<group>";
