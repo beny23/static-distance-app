@@ -173,7 +173,6 @@ extension EatOutMapViewController: MKMapViewDelegate {
     }
 
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        AppLogger.log(object: self, function: #function, message: "\(mapView.region.span.latitudeDelta.round(to: 2))")
         let newLatitudeDelta = mapView.region.span.latitudeDelta.round(to: 2)
         let didZoomIn = newLatitudeDelta < lastLatitudeDelta
         if mapView.region.span.latitudeDelta <= CLLocationDegrees.ZoomThreshold {

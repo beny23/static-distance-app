@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -18,26 +18,52 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="mutedStandard" showsUserLocation="YES" showsCompass="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xv7-Yd-g46">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </mapView>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEg-Yv-zZj">
-                                <rect key="frame" x="140" y="426" width="134.5" height="44"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hfu-eb-56Q">
-                                    <rect key="frame" x="0.0" y="0.0" width="134.5" height="44"/>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="egT-FS-uCj">
+                                <rect key="frame" x="68.5" y="431" width="277.5" height="34"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="KRe-uP-qjM">
+                                    <rect key="frame" x="0.0" y="0.0" width="277.5" height="34"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JuM-lb-zLG">
+                                            <rect key="frame" x="-0.5" y="0.0" width="278" height="34"/>
+                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="uWn-DI-o8b">
+                                                <rect key="frame" x="0.0" y="0.0" width="278" height="34"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Zoom closer to show locations" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BmV-Wc-LNE" userLabel="Overlay Label" customClass="PaddedLabel" customModule="EatOutToHelpOut" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="277.5" height="34"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                        <size key="shadowOffset" width="-1" height="-1"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="5"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </label>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="BmV-Wc-LNE" firstAttribute="centerX" secondItem="uWn-DI-o8b" secondAttribute="centerX" id="rGl-f0-oqr"/>
+                                                    <constraint firstItem="BmV-Wc-LNE" firstAttribute="centerY" secondItem="uWn-DI-o8b" secondAttribute="centerY" id="zo7-x4-l0V"/>
+                                                </constraints>
+                                            </view>
+                                            <vibrancyEffect>
+                                                <blurEffect style="prominent"/>
+                                            </vibrancyEffect>
+                                        </visualEffectView>
+                                    </subviews>
                                 </view>
-                                <blurEffect style="systemUltraThinMaterial"/>
+                                <constraints>
+                                    <constraint firstItem="JuM-lb-zLG" firstAttribute="leading" secondItem="egT-FS-uCj" secondAttribute="leading" id="G1U-ej-WxM"/>
+                                    <constraint firstAttribute="bottom" secondItem="JuM-lb-zLG" secondAttribute="bottom" id="NJ0-YE-RPu"/>
+                                    <constraint firstAttribute="trailing" secondItem="JuM-lb-zLG" secondAttribute="trailing" id="S3h-8n-Tid"/>
+                                    <constraint firstAttribute="height" secondItem="BmV-Wc-LNE" secondAttribute="height" id="Xdd-g8-IWl"/>
+                                    <constraint firstAttribute="width" secondItem="BmV-Wc-LNE" secondAttribute="width" id="ady-7K-SZj"/>
+                                    <constraint firstItem="JuM-lb-zLG" firstAttribute="top" secondItem="egT-FS-uCj" secondAttribute="top" id="jY2-fL-GYP"/>
+                                </constraints>
+                                <blurEffect style="systemThinMaterial"/>
                             </visualEffectView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Zoom nearer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BmV-Wc-LNE" userLabel="Overlay Label" customClass="PaddedLabel" customModule="EatOutToHelpOut" customModuleProvider="target">
-                                <rect key="frame" x="145" y="431" width="124.5" height="34"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                                <size key="shadowOffset" width="-1" height="-1"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.90000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Badge" translatesAutoresizingMaskIntoConstraints="NO" id="Fqv-bv-0rv">
                                 <rect key="frame" x="329" y="54" width="65" height="65"/>
                                 <constraints>
@@ -85,24 +111,20 @@
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FQA-77-0Sw" secondAttribute="trailing" constant="35" id="BJK-JT-M1L"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Fqv-bv-0rv" secondAttribute="trailing" constant="20" id="BOj-UT-gJI"/>
-                            <constraint firstItem="oEg-Yv-zZj" firstAttribute="bottom" secondItem="BmV-Wc-LNE" secondAttribute="bottom" constant="5" id="DOg-Fg-nii"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FQA-77-0Sw" secondAttribute="bottom" constant="40" id="H0F-jz-svJ"/>
                             <constraint firstItem="iEl-ZE-dtK" firstAttribute="centerY" secondItem="FQA-77-0Sw" secondAttribute="centerY" id="LAd-Ci-rxC"/>
                             <constraint firstItem="fHb-Ac-Xsf" firstAttribute="height" secondItem="FQA-77-0Sw" secondAttribute="height" id="U1k-ui-neb"/>
-                            <constraint firstItem="BmV-Wc-LNE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Uao-3t-XgS"/>
-                            <constraint firstItem="oEg-Yv-zZj" firstAttribute="leading" secondItem="BmV-Wc-LNE" secondAttribute="leading" constant="-5" id="ZZ2-zU-0uL"/>
                             <constraint firstItem="Xv7-Yd-g46" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aAp-Fy-M33"/>
                             <constraint firstItem="fHb-Ac-Xsf" firstAttribute="trailing" secondItem="FQA-77-0Sw" secondAttribute="trailing" id="bFH-SQ-xCS"/>
-                            <constraint firstItem="BmV-Wc-LNE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="h62-LE-xAT"/>
-                            <constraint firstItem="oEg-Yv-zZj" firstAttribute="top" secondItem="BmV-Wc-LNE" secondAttribute="top" constant="-5" id="i1z-wy-Vk5"/>
                             <constraint firstItem="fHb-Ac-Xsf" firstAttribute="bottom" secondItem="FQA-77-0Sw" secondAttribute="bottom" id="jrh-4F-g2P"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Xv7-Yd-g46" secondAttribute="trailing" id="kxN-Dx-Btf"/>
-                            <constraint firstItem="oEg-Yv-zZj" firstAttribute="trailing" secondItem="BmV-Wc-LNE" secondAttribute="trailing" constant="5" id="lAJ-2b-tk1"/>
                             <constraint firstItem="Fqv-bv-0rv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="lgv-0b-Z8T"/>
+                            <constraint firstItem="egT-FS-uCj" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="mwk-Na-rbb"/>
                             <constraint firstItem="iEl-ZE-dtK" firstAttribute="centerX" secondItem="FQA-77-0Sw" secondAttribute="centerX" id="nKk-Tp-Axr"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="Xv7-Yd-g46" secondAttribute="top" constant="44" id="rn5-4r-kEQ"/>
                             <constraint firstItem="Xv7-Yd-g46" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="34" id="utf-Pl-CGq"/>
                             <constraint firstItem="fHb-Ac-Xsf" firstAttribute="width" secondItem="FQA-77-0Sw" secondAttribute="width" id="zQu-FA-xNV"/>
+                            <constraint firstItem="egT-FS-uCj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zZf-aK-zhr"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -111,7 +133,7 @@
                         <outlet property="loadingIndicator" destination="iEl-ZE-dtK" id="fba-CZ-foV"/>
                         <outlet property="mapUserTrackingButtonContainer" destination="fHb-Ac-Xsf" id="Cbq-yr-Prd"/>
                         <outlet property="mapView" destination="Xv7-Yd-g46" id="YmK-A1-qPe"/>
-                        <outlet property="zoomNearerBkgd" destination="oEg-Yv-zZj" id="L3X-Ym-jQV"/>
+                        <outlet property="zoomNearerBkgd" destination="egT-FS-uCj" id="316-b6-Dxr"/>
                         <outlet property="zoomNearerLabel" destination="BmV-Wc-LNE" id="emA-Zf-PHS"/>
                         <segue destination="kGj-NC-eST" kind="presentation" identifier="WebViewSegueIdentifier" id="1v4-TW-pwZ"/>
                     </connections>
