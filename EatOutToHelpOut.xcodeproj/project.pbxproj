@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42EE680F24E60D6E006D2E64 /* EatOutClusterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EE680E24E60D6E006D2E64 /* EatOutClusterView.swift */; };
 		8C1870FA24DAB32100CA919B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1870F924DAB32100CA919B /* AppDelegate.swift */; };
 		8C18710124DAB32100CA919B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C1870FF24DAB32100CA919B /* Main.storyboard */; };
 		8C18710324DAB32500CA919B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C18710224DAB32500CA919B /* Assets.xcassets */; };
@@ -45,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		42EE680E24E60D6E006D2E64 /* EatOutClusterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EatOutClusterView.swift; sourceTree = "<group>"; };
 		8C1870F624DAB32100CA919B /* EatOutToHelpOut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EatOutToHelpOut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C1870F924DAB32100CA919B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8C18710024DAB32100CA919B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				8C2A54DC24E1C39D000B7E82 /* AppOperabilityMonitoring.swift */,
 				8CB60FDB24DC8F7C00FC6F74 /* StoryboardUI.swift */,
 				8C18711B24DAB35D00CA919B /* EatOutFinderUI.swift */,
+				42EE680E24E60D6E006D2E64 /* EatOutClusterView.swift */,
 				8C18711F24DACC4800CA919B /* EatOutFinder.swift */,
 				8CB60FDF24DE895E00FC6F74 /* EatOutGeoJsonGateway.swift */,
 				8CDF212B24DBF8330031E6D2 /* JSONFileDownloadManager.swift */,
@@ -293,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CB60FDE24DDACF200FC6F74 /* CoreLocationGateway.swift in Sources */,
+				42EE680F24E60D6E006D2E64 /* EatOutClusterView.swift in Sources */,
 				8CB60FDA24DC5AC300FC6F74 /* WebViewController.swift in Sources */,
 				8CB60FDC24DC8F7C00FC6F74 /* StoryboardUI.swift in Sources */,
 				8CDF212C24DBF8330031E6D2 /* JSONFileDownloadManager.swift in Sources */,
